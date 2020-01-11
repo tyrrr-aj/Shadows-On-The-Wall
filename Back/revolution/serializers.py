@@ -24,6 +24,12 @@ class AppUserSerializer(serializers.ModelSerializer):
         fields = ['pk']
 
 
+class AppUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppUser
+        fields = ['username']
+
+
 class AppUserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppUser
@@ -36,9 +42,25 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ['user', 'text', 'date_time']
 
 
-class ProblemSerializer(serializers.ModelSerializer):
-    user = AppUserDetailsSerializer
+class ProblemSerializer(serializers.Serializer):
+    pk = serializers.IntegerField()
+    title = serializers.CharField(max_length=300)
+    description = serializers.CharField(max_length=5000)
+    date_time = serializers.DateTimeField()
+    votes = serializers.IntegerField()
+    user = AppUserNameSerializer()
 
-    class Meta:
-        model = Problem
-        fields = ['id', 'user', 'title', 'description', 'date_time', 'comments', 'votes', 'tags', 'solutions']
+
+class NodeSerializer(serializers.Serializer):
+    pk = serializers.IntegerField()
+    votes = serializers.IntegerField()
+    date = serializers.DateTimeField()
+
+
+class GraphSerializer(serializers.Serializer):
+    root = NodeSerializer()
+    nodes = NodeSerializer(many=True)
+    edges = serializers.ListSerializer(
+        child=serializers.ListSerializer(
+            child=serializers.IntegerField()
+        ))
