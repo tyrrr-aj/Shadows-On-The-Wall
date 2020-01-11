@@ -13,6 +13,10 @@ class Comment(models.Model):
     date = models.DateField()
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=50)
+
+
 class Entry(models.Model):
     user = models.ForeignKey(AppUser, null=True, on_delete=models.SET_NULL)
 
@@ -23,6 +27,8 @@ class Entry(models.Model):
     comments = models.ManyToManyField(Comment)
 
     votes = models.IntegerField()
+
+    tags = models.ManyToManyField(Tag)
 
     def upvote(self):
         pass
@@ -37,6 +43,9 @@ class Entry(models.Model):
 class Problem(Entry):
     solutions = models.ManyToManyField('Solution')
 
+    def get_graph(self):
+        pass
+
 
 class Solution(Entry):
     improvements = models.ManyToManyField('self')
@@ -45,3 +54,6 @@ class Solution(Entry):
 
 class Initiative(Entry):
     improvements = models.ManyToManyField('self')
+
+    def get_graph(self):
+        pass
