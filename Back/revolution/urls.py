@@ -6,4 +6,7 @@ urlpatterns = [
     path('problem/new', views.NewProblem.as_view()),
     path('tag/new', views.NewTag.as_view()),
     path('tags/<int:pk>', views.TagList.as_view()),
+    path('comment/new', views.AddComment.as_view()),
+    path('comments/<int:pk>', views.CommentList.as_view()),
+    path('user/<int:pk>', views.AppUserDetails.as_view())
 ]
