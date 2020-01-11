@@ -8,16 +8,16 @@ class AppUser(models.Model):  # django.contrib.auth.User
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(AppUser, on_delete=models.SET_NULL)
-    text = models.CharField()
+    user = models.ForeignKey(AppUser, null=True, on_delete=models.SET_NULL)
+    text = models.CharField(max_length=5000)
     date = models.DateField()
 
 
 class Entry(models.Model):
-    user = models.ForeignKey(AppUser, on_delete=models.SET_NULL)
+    user = models.ForeignKey(AppUser, null=True, on_delete=models.SET_NULL)
 
-    title = models.CharField()
-    description = models.CharField()
+    title = models.CharField(max_length=300)
+    description = models.CharField(max_length=5000)
     date = models.DateField()
 
     comments = models.ManyToManyField(Comment)
@@ -30,15 +30,18 @@ class Entry(models.Model):
     def downvote(self):
         pass
 
+    def add_comment(self, comment):
+        self.comments.add(comment)
+
 
 class Problem(Entry):
     solutions = models.ManyToManyField('Solution')
 
 
 class Solution(Entry):
-    children = models.ManyToManyField('self')
-    problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
+    improvements = models.ManyToManyField('self')
+    source_problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
 
 
 class Initiative(Entry):
-    children = models.ManyToManyField('self')
+    improvements = models.ManyToManyField('self')
