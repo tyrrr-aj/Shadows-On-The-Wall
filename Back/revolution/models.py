@@ -1,10 +1,14 @@
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
+
+
 # Create your models here.
 
 
 class AppUser(User):
+    username = models.CharField(max_length=50)
+
     class Meta:
         proxy = True
 
@@ -30,7 +34,7 @@ class Entry(models.Model):
 
     title = models.CharField(max_length=300)
     description = models.CharField(max_length=5000)
-    date_time = models.DateTimeField(default=datetime.datetime.now)
+    date_time = models.DateTimeField(default=datetime.datetime.now())  # default=datetime.datetime.now)
 
     comments = models.ManyToManyField(Comment, blank=True, default=None)
     # TODO: on delete entry - delete comments!
@@ -45,7 +49,6 @@ class Entry(models.Model):
 
     def add_comment(self, comment):
         comm = self.comments.add(comment)
-        comm.save()
 
     def __str__(self):
         return self.title

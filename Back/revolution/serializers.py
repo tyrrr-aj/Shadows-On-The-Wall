@@ -24,7 +24,7 @@ class AppUserSerializer(serializers.ModelSerializer):
         fields = ['pk']
 
 
-class AppUserSerializer(serializers.ModelSerializer):
+class AppUserNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppUser
         fields = ['username']
@@ -37,9 +37,11 @@ class AppUserDetailsSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=AppUser.objects.all())
+
     class Meta:
         model = Comment
-        fields = ['user', 'text', 'date_time']
+        fields = ['user', 'text']
 
 
 class ProblemSerializer(serializers.Serializer):

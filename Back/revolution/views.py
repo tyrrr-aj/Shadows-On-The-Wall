@@ -1,15 +1,13 @@
-from revolution.models import Problem, Tag, Comment, AppUser, Entry
+from django.http import HttpResponse
+
+from revolution.models import Problem, Tag, Comment, AppUser, Entry, Initiative, Solution
 from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer,\
-    CommentSerializer, AppUserDetailsSerializer
-from rest_framework import generics
-from rest_framework import mixins
+    CommentSerializer, AppUserDetailsSerializer, GraphSerializer
+
 from rest_framework import generics, viewsets
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-
-from revolution.models import Problem, Initiative, Tag
-from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer, GraphSerializer
 
 
 class ProblemViewSet(viewsets.ViewSet):
@@ -19,12 +17,51 @@ class ProblemViewSet(viewsets.ViewSet):
         serializer = ProblemSerializer(problem)
         return Response(serializer.data)
 
+
 problem_details = ProblemViewSet.as_view({'get': 'retrieve_problem'})
 
 
 class NewProblem(generics.CreateAPIView):
     queryset = Problem.objects.all()
     serializer_class = NewProblemSerializer
+
+
+class AddCommentMixin:
+    def add_comment(self, entry, content):
+        serializer = CommentSerializer(data=content)
+        if serializer.is_valid():
+            comment = serializer.save()
+            entry.add_comment(comment)
+
+
+class AddCommentToProblem(generics.CreateAPIView, AddCommentMixin):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def post(self, request, *args, **kwargs):
+        entry = get_object_or_404(Problem, pk=kwargs["pk"])
+        self.add_comment(entry, request.data)
+        return HttpResponse(status=200)
+
+
+class AddCommentToInitiative(generics.CreateAPIView, AddCommentMixin):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def post(self, request, *args, **kwargs):
+        entry = get_object_or_404(Initiative, pk=kwargs["pk"])
+        self.add_comment(entry, request.data)
+        return HttpResponse(status=200)
+
+
+class AddCommentToSolution(generics.CreateAPIView, AddCommentMixin):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def post(self, request, *args, **kwargs):
+        entry = get_object_or_404(Solution, pk=kwargs["pk"])
+        self.add_comment(entry, request.data)
+        return HttpResponse(status=200)
 
 
 class TagList(generics.ListAPIView):
@@ -37,15 +74,9 @@ class NewTag(generics.CreateAPIView):
     serializer_class = TagSerializer
 
 
-# class CommentList(generics.ListAPIView):
-#     queryset = Comment.objects.all()
-#     serializer_class = CommentSerializer
-#
-#
-# class AddCommentMixin(generics.CreateAPIView, Entry):
-#     queryset = Comment.objects.all()
-#     Entry.add_comment(Entry, queryset)
-#     serializer_class = CommentSerializer
+class CommentList(generics.ListAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
 
 
 class AppUserDetails(generics.RetrieveUpdateDestroyAPIView):
@@ -69,3 +100,4 @@ class GraphViewSet(viewsets.ViewSet):
 
 problem_graph = GraphViewSet.as_view({'get': 'retrieve_problem'})
 initiative_graph = GraphViewSet.as_view({'get': 'retrieve_initiative'})
+
