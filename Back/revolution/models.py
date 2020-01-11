@@ -57,3 +57,17 @@ class Initiative(Entry):
 
     def get_graph(self):
         pass
+
+
+class Node:
+    def __init__(self, votes, date):
+        self.votes = votes
+        self.date = date
+
+
+class Graph:
+    def __init__(self, root):
+        self.root = root
+        self.nodes = []
+        self.edges = []
+
