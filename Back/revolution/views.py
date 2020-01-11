@@ -2,7 +2,6 @@ from revolution.models import Problem, Tag, Comment, AppUser, Entry
 from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer,\
     CommentSerializer, AppUserDetailsSerializer
 from rest_framework import generics
-from rest_framework import mixins
 
 
 class ProblemDetails(generics.RetrieveUpdateDestroyAPIView):
@@ -13,6 +12,22 @@ class ProblemDetails(generics.RetrieveUpdateDestroyAPIView):
 class NewProblem(generics.CreateAPIView):
     queryset = Problem.objects.all()
     serializer_class = NewProblemSerializer
+
+
+class AddCommentMixin:
+    def add_comment(self, entry, content):
+        comment = Comment(**content)
+        entry.add_comment(comment)
+
+
+class AddCommentToProblem(generics.CreateAPIView, AddCommentMixin):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def post(self, request, *args, **kwargs):
+        entry = kwargs["pk"]
+        AddCommentMixin.add_comment(entry, *args)
+        return self.create(request, *args, **kwargs)
 
 
 class TagList(generics.ListAPIView):
@@ -27,12 +42,6 @@ class NewTag(generics.CreateAPIView):
 
 class CommentList(generics.ListAPIView):
     queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-
-
-class AddCommentMixin(generics.CreateAPIView, Entry):
-    queryset = Comment.objects.all()
-    Entry.add_comment(Entry, queryset)
     serializer_class = CommentSerializer
 
 
