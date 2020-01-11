@@ -1,0 +1,13 @@
+.submission {
+  &__rating {
+    display: flex;
+    flex-direction: column;
+    .MuiIconButton-root {
+      font-size: 1.5rem;
+      padding: 2px;
+    }
+    &__value {
+      margin-bottom: 0;
+    }
+  }
+}

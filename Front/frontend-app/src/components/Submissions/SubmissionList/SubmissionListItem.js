@@ -10,12 +10,13 @@ import {
   ListItemText,
   TextField
 } from "@material-ui/core";
-import ThumbUp from "@material-ui/icons/ThumbUp";
-import ThumbDown from "@material-ui/icons/ThumbDown";
+import ArrowDropUp from "@material-ui/icons/ArrowDropUp";
+import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
 import {
   upvoteSubmission,
   downvoteSubmission
 } from "../../../modules/Submissions/actions";
+import "./Submission.scss";
 
 const SubmissionListItem = ({ submission, handleUpVote, handleDownVote }) => {
   const handleGoToSubmission = () => {
@@ -32,19 +33,21 @@ const SubmissionListItem = ({ submission, handleUpVote, handleDownVote }) => {
 
   return (
     <Fragment>
-      <ListItem onClick={handleGoToSubmission}>
+      <ListItem button onClick={handleGoToSubmission}>
         <ListItemText
           primary={submission.title}
           secondary={submission.description}
         />
         <ListItemSecondaryAction>
-          <IconButton aria-label="upvote" onClick={handleUpVoteClick}>
-            <ThumbUp />
-          </IconButton>
-          {submission.rating}
-          <IconButton aria-label="downvote" onClick={handleDownVoteClick}>
-            <ThumbDown />
-          </IconButton>
+          <div className={"submission__rating"}>
+            <IconButton aria-label="upvote" onClick={handleUpVoteClick}>
+              <ArrowDropUp />
+            </IconButton>
+            <p className={"submission__rating__value"}>{submission.rating}</p>
+            <IconButton aria-label="downvote" onClick={handleDownVoteClick}>
+              <ArrowDropDown />
+            </IconButton>
+          </div>
         </ListItemSecondaryAction>
       </ListItem>
     </Fragment>
