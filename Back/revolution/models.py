@@ -7,8 +7,10 @@ class AppUser(models.Model):  # django.contrib.auth.User
     pass
 
 
-class GraphNode(models.Model):
-    parent = models.ForeignKey('self', on_delete=models.CASCADE)
+class Comment(models.Model):
+    user = models.ForeignKey(AppUser, on_delete=models.SET_NULL)
+    text = models.CharField()
+    date = models.DateField()
 
 
 class Entry(models.Model):
@@ -17,6 +19,8 @@ class Entry(models.Model):
     title = models.CharField()
     description = models.CharField()
     date = models.DateField()
+
+    comments = models.ManyToManyField(Comment)
 
     votes = models.IntegerField()
 
@@ -27,22 +31,14 @@ class Entry(models.Model):
         pass
 
 
-class Problem(GraphNode, Entry):
-    pass
+class Problem(Entry):
+    solutions = models.ManyToManyField('Solution')
 
 
-class Solution(GraphNode, Entry):
+class Solution(Entry):
+    children = models.ManyToManyField('self')
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
 
 
-class Initiative(GraphNode, Entry):
-    pass
-
-
-class Comment(models.Model):
-    user = models.ForeignKey(AppUser, on_delete=models.SET_NULL)
-    text = models.CharField()
-    date = models.DateField()
-    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
-
-    
+class Initiative(Entry):
+    children = models.ManyToManyField('self')
