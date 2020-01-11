@@ -4,12 +4,6 @@ from revolution.models import Problem, AppUser, Tag, Comment
 from datetime import datetime
 
 
-class ProblemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Problem
-        fields = ['id', 'user', 'title', 'description', 'date_time', 'comments', 'votes', 'tags', 'solutions']
-
-
 class NewProblemSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=AppUser.objects.all())
 
@@ -33,10 +27,18 @@ class AppUserSerializer(serializers.ModelSerializer):
 class AppUserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppUser
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['pk', 'first_name', 'last_name', 'email']
 
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['user', 'text', 'date_time']
+
+
+class ProblemSerializer(serializers.ModelSerializer):
+    user = AppUserDetailsSerializer
+
+    class Meta:
+        model = Problem
+        fields = ['id', 'user', 'title', 'description', 'date_time', 'comments', 'votes', 'tags', 'solutions']

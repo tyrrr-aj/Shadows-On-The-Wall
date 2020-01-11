@@ -25,15 +25,15 @@ class NewTag(generics.CreateAPIView):
     serializer_class = TagSerializer
 
 
-class CommentList(generics.ListAPIView):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-
-
-class AddCommentMixin(generics.CreateAPIView, Entry):
-    queryset = Comment.objects.all()
-    Entry.add_comment(Entry, queryset)
-    serializer_class = CommentSerializer
+# class CommentList(generics.ListAPIView):
+#     queryset = Comment.objects.all()
+#     serializer_class = CommentSerializer
+#
+#
+# class AddCommentMixin(generics.CreateAPIView, Entry):
+#     queryset = Comment.objects.all()
+#     Entry.add_comment(Entry, queryset)
+#     serializer_class = CommentSerializer
 
 
 class AppUserDetails(generics.RetrieveUpdateDestroyAPIView):
