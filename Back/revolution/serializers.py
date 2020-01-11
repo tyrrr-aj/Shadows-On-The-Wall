@@ -30,7 +30,7 @@ class NodeSerializer(serializers.Serializer):
 
 class GraphSerializer(serializers.Serializer):
     root = NodeSerializer()
-    nodes = NodeSerializer()
+    nodes = NodeSerializer(many=True)
     edges = serializers.ListSerializer(
         child=serializers.ListSerializer(
             child=serializers.IntegerField()

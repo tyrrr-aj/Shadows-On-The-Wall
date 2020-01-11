@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from revolution.models import Problem, Initiative, Tag
 from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer, GraphSerializer
 
+
 class ProblemDetails(generics.RetrieveUpdateDestroyAPIView):
     queryset = Problem.objects.all()
     serializer_class = NewProblemSerializer
@@ -30,15 +31,15 @@ class GraphViewSet(viewsets.ViewSet):
     @action(detail=True, methods=['GET'])
     def retrieve_problem(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
-        serializer = GraphSerializer()
+        serializer = GraphSerializer(problem.get_graph())
         return Response(serializer.data)
 
     @action(detail=True, methods=['GET'])
     def retrieve_initiative(self, request, pk):
         initiative = get_object_or_404(Initiative, pk=pk)
-        serializer = GraphSerializer()
+        serializer = GraphSerializer(initiative.get_graph())
         return Response(serializer.data)
 
 
-problem_graph = GraphViewSet.as_view({'get': 'retrieve'})
-initiative_graph = GraphViewSet.as_view({'get': 'retrieve'})
+problem_graph = GraphViewSet.as_view({'get': 'retrieve_problem'})
+initiative_graph = GraphViewSet.as_view({'get': 'retrieve_initiative'})
