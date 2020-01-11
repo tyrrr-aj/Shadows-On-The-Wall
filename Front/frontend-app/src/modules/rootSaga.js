@@ -1,6 +1,6 @@
 import { all } from "redux-saga/effects";
+import submissionsSagas from "./Submissions/sagas";
 
 export default function* rootSaga() {
-    yield all([
-    ]);
+  yield all([submissionsSagas()]);
 }

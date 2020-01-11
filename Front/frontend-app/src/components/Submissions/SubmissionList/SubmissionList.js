@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, memo } from "react";
 import SubmissionListItem from "./SubmissionListItem";
 import { Grid, List } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -40,4 +40,7 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SubmissionList);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(memo(SubmissionList));

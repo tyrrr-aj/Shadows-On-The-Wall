@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, memo } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import {
@@ -12,6 +12,10 @@ import {
 } from "@material-ui/core";
 import ThumbUp from "@material-ui/icons/ThumbUp";
 import ThumbDown from "@material-ui/icons/ThumbDown";
+import {
+  upvoteSubmission,
+  downvoteSubmission
+} from "../../../modules/Submissions/actions";
 
 const SubmissionListItem = ({ submission, handleUpVote, handleDownVote }) => {
   const handleGoToSubmission = () => {
@@ -51,10 +55,10 @@ SubmissionListItem.propTypes = {};
 
 const mapDispatchToProps = dispatch => ({
   handleUpVote: id => {
-    dispatch(getSubmissions(id));
+    dispatch(upvoteSubmission(id));
   },
   handleDownVote: id => {
-    dispatch(getSubmissions(id));
+    dispatch(downvoteSubmission(id));
   }
 });
-export default connect(null, mapDispatchToProps)(SubmissionListItem);
+export default connect(null, mapDispatchToProps)(memo(SubmissionListItem));
