@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery } from "redux-saga/effects";
+import { all, call, put, takeEvery, select } from "redux-saga/effects";
 import * as api from "./api";
 import {
   GET_SUBMISSIONS,
@@ -8,11 +8,15 @@ import {
   SUBMISSION_DOWNVOTE,
   SUBMISSION_DOWNVOTE_SUCCESS
 } from "./actions";
+export const getSelectedTags = state => state.filtering.selectedTags;
+export const getSorting = state => state.filtering.sorting;
 
 function* getSubmissions() {
   try {
     console.log("sss");
-    const submissions = yield call(api.fetchSubmissions);
+    const tags = yield select(getSelectedTags);
+    const sorting = yield select(getSorting);
+    const submissions = yield call(api.fetchSubmissions, tags, sorting);
     console.log(submissions);
     yield put({ type: GET_SUBMISSIONS_SUCCESS, payload: submissions });
   } catch (error) {

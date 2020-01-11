@@ -10,7 +10,8 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { getTags } from "../../modules/Tags/actions";
+import { getTags, setSelectedTags } from "../../modules/Tags/actions";
+import { getSubmissions } from "../../modules/Submissions/actions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TagPanel = ({ tags, getTags }) => {
+const TagPanel = ({ tags, getTags, getSubmissions, setSelectedTags }) => {
   const classes = useStyles();
 
   useEffect(() => {
@@ -38,6 +39,8 @@ const TagPanel = ({ tags, getTags }) => {
     }
 
     setChecked(newChecked);
+    setSelectedTags(newChecked);
+    getSubmissions();
   };
 
   return (
@@ -74,13 +77,19 @@ const TagPanel = ({ tags, getTags }) => {
 TagPanel.propTypes = {};
 
 const mapStateToProps = state => ({
-  tags: state.tags.tags,
-  loading: state.tags.loading
+  tags: state.filtering.tags,
+  loading: state.filtering.loading
 });
 
 const mapDispatchToProps = dispatch => ({
   getTags: () => {
     dispatch(getTags());
+  },
+  getSubmissions: () => {
+    dispatch(getSubmissions());
+  },
+  setSelectedTags: tags => {
+    dispatch(setSelectedTags(tags));
   }
 });
 
