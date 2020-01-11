@@ -1,5 +1,5 @@
-from revolution.models import Problem, Tag
-from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer
+from revolution.models import Problem, Tag, Comment
+from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer, CommentSerializer
 from rest_framework import generics
 
 
@@ -21,3 +21,14 @@ class TagList(generics.ListAPIView):
 class NewTag(generics.CreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+
+class CommentList(generics.ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+
+class NewComment(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+

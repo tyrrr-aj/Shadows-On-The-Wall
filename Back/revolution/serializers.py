@@ -1,8 +1,6 @@
 from rest_framework import serializers
-from revolution.models import Problem, AppUser, Tag
-
+from revolution.models import Problem, AppUser, Tag, Comment
 from datetime import datetime
-
 
 
 class ProblemSerializer(serializers.ModelSerializer):
@@ -21,3 +19,15 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ['name']
+
+
+class AppUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppUser
+        fields = ['pk']
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ['user', 'text', 'date']
