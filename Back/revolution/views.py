@@ -1,4 +1,6 @@
-from revolution.models import Problem, Tag, Comment, AppUser, Entry, Initiative
+from django.http import HttpResponse
+
+from revolution.models import Problem, Tag, Comment, AppUser, Entry, Initiative, Solution
 from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer,\
     CommentSerializer, AppUserDetailsSerializer, GraphSerializer
 
@@ -20,8 +22,10 @@ class NewProblem(generics.CreateAPIView):
 
 class AddCommentMixin:
     def add_comment(self, entry, content):
-        comment = Comment(**content)
-        entry.add_comment(comment)
+        serializer = CommentSerializer(data=content)
+        if serializer.is_valid():
+            comment = serializer.save()
+            entry.add_comment(comment)
 
 
 class AddCommentToProblem(generics.CreateAPIView, AddCommentMixin):
@@ -29,9 +33,29 @@ class AddCommentToProblem(generics.CreateAPIView, AddCommentMixin):
     serializer_class = CommentSerializer
 
     def post(self, request, *args, **kwargs):
-        entry = kwargs["pk"]
-        AddCommentMixin.add_comment(entry, *args)
-        return self.create(request, *args, **kwargs)
+        entry = get_object_or_404(Problem, pk=kwargs["pk"])
+        self.add_comment(entry, request.data)
+        return HttpResponse(status=200)
+
+
+class AddCommentToInitiative(generics.CreateAPIView, AddCommentMixin):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def post(self, request, *args, **kwargs):
+        entry = get_object_or_404(Initiative, pk=kwargs["pk"])
+        self.add_comment(entry, request.data)
+        return HttpResponse(status=200)
+
+
+class AddCommentToSolution(generics.CreateAPIView, AddCommentMixin):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def post(self, request, *args, **kwargs):
+        entry = get_object_or_404(Solution, pk=kwargs["pk"])
+        self.add_comment(entry, request.data)
+        return HttpResponse(status=200)
 
 
 class TagList(generics.ListAPIView):

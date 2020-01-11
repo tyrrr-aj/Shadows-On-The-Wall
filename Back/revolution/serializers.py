@@ -10,6 +10,8 @@ class ProblemSerializer(serializers.ModelSerializer):
 
 
 class NewProblemSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=AppUser.objects.all())
+
     class Meta:
         model = Problem
         fields = ['id', 'user', 'title', 'description', 'tags']
@@ -34,9 +36,11 @@ class AppUserDetailsSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=AppUser.objects.all())
+
     class Meta:
         model = Comment
-        fields = ['user', 'text', 'date_time']
+        fields = ['user', 'text']
 
 
 class NodeSerializer(serializers.Serializer):
