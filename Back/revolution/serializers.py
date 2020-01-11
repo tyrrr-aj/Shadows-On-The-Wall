@@ -12,10 +12,14 @@ class NewProblemSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'title', 'description', 'tags']
 
 
-class TagSerializer(serializers.ModelSerializer):
+class TagSerializer(serializers.Serializer):
     class Meta:
         model = Tag
         fields = ['name']
+
+
+class TagListSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=50)
 
 
 class AppUserSerializer(serializers.ModelSerializer):
@@ -24,7 +28,7 @@ class AppUserSerializer(serializers.ModelSerializer):
         fields = ['pk']
 
 
-class AppUserNameSerializer(serializers.ModelSerializer):
+class AppUsernameSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppUser
         fields = ['username']
@@ -50,7 +54,7 @@ class ProblemSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=5000)
     date_time = serializers.DateTimeField()
     votes = serializers.IntegerField()
-    user = AppUserNameSerializer()
+    author = serializers.CharField(source='problem.user')
 
 
 class NodeSerializer(serializers.Serializer):

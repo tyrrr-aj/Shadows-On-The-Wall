@@ -7,8 +7,6 @@ from django.contrib.auth.models import User
 
 
 class AppUser(User):
-    username = models.CharField(max_length=50)
-
     class Meta:
         proxy = True
 

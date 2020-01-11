@@ -64,14 +64,26 @@ class AddCommentToSolution(generics.CreateAPIView, AddCommentMixin):
         return HttpResponse(status=200)
 
 
-class TagList(generics.ListAPIView):
+class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+    @action(detail=True, methods=['GET'])
+    def retrieve_filtered_tags(self, request):
+        queryset = Tag.objects.all()
+        phrase = self.request.query_params.get('name', None)
+        if phrase is not None:
+            queryset = queryset.filter(name__contains=phrase)
+        return Response(list(queryset.values_list('name', flat=True)))
 
 
 class NewTag(generics.CreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+
+retrieve_all_tags = TagViewSet.as_view({'get': 'retrieve_all_tags'})
+retrieve_filtered_tags = TagViewSet.as_view({'get': 'retrieve_filtered_tags'})
 
 
 class CommentList(generics.ListAPIView):
