@@ -11,7 +11,7 @@ class AppUser(User):
 class Comment(models.Model):
     user = models.ForeignKey(AppUser, null=True, on_delete=models.SET_NULL)
     text = models.CharField(max_length=5000)
-    date_time = models.DateField(auto_now_add=True)
+    date_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.text
@@ -29,7 +29,7 @@ class Entry(models.Model):
 
     title = models.CharField(max_length=300)
     description = models.CharField(max_length=5000)
-    date_time = models.DateField(auto_now_add=True)
+    date_time = models.DateTimeField(auto_now_add=True)
 
     comments = models.ManyToManyField(Comment, blank=True)
     # TODO: on delete entry - delete comments!
