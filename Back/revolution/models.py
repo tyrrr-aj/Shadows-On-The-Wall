@@ -8,21 +8,27 @@ class AppUser(models.Model):  # django.contrib.auth.User
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(AppUser, on_delete=models.SET_NULL)
-    text = models.CharField()
+    user = models.ForeignKey(AppUser, null=True, on_delete=models.SET_NULL)
+    text = models.CharField(max_length=5000)
     date = models.DateField()
 
 
-class Entry(models.Model):
-    user = models.ForeignKey(AppUser, on_delete=models.SET_NULL)
+class Tag(models.Model):
+    name = models.CharField(max_length=50)
 
-    title = models.CharField()
-    description = models.CharField()
+
+class Entry(models.Model):
+    user = models.ForeignKey(AppUser, null=True, on_delete=models.SET_NULL)
+
+    title = models.CharField(max_length=300)
+    description = models.CharField(max_length=5000)
     date = models.DateField()
 
     comments = models.ManyToManyField(Comment)
 
     votes = models.IntegerField()
+
+    tags = models.ManyToManyField(Tag)
 
     def upvote(self):
         pass
@@ -30,15 +36,38 @@ class Entry(models.Model):
     def downvote(self):
         pass
 
+    def add_comment(self, comment):
+        self.comments.add(comment)
+
 
 class Problem(Entry):
     solutions = models.ManyToManyField('Solution')
 
+    def get_graph(self):
+        pass
+
 
 class Solution(Entry):
-    children = models.ManyToManyField('self')
-    problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
+    improvements = models.ManyToManyField('self')
+    source_problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
 
 
 class Initiative(Entry):
-    children = models.ManyToManyField('self')
+    improvements = models.ManyToManyField('self')
+
+    def get_graph(self):
+        pass
+
+
+class Node:
+    def __init__(self, votes, date):
+        self.votes = votes
+        self.date = date
+
+
+class Graph:
+    def __init__(self, root):
+        self.root = root
+        self.nodes = []
+        self.edges = []
+
