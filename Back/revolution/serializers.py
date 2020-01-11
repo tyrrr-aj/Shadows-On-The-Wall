@@ -1,9 +1,6 @@
 from rest_framework import serializers
 from revolution.models import Problem, AppUser, Tag
 
-from datetime import datetime
-
-
 
 class ProblemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,6 +9,8 @@ class ProblemSerializer(serializers.ModelSerializer):
 
 
 class NewProblemSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=AppUser.objects.all())
+
     class Meta:
         model = Problem
         fields = ['id', 'user', 'title', 'description', 'tags']
