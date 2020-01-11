@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import Header from "../Header/Header";
 import Submissions from "../Submissions/Submissions";
@@ -7,14 +7,14 @@ import { Grid } from "@material-ui/core";
 
 const Home = props => {
   return (
-    <div>
+    <Fragment>
       <Header />
       Home
       <Grid container item xs={12}>
         <TagPanel />
         <Submissions />
       </Grid>
-    </div>
+    </Fragment>
   );
 };
 

@@ -6,10 +6,27 @@ import {
   SUBMISSION_UPVOTE_SUCCESS,
   SUBMISSION_UPVOTE,
   SUBMISSION_DOWNVOTE,
-  SUBMISSION_DOWNVOTE_SUCCESS
+  SUBMISSION_DOWNVOTE_SUCCESS,
+  POST_SUBMISSION,
+  POST_SUBMISSION_SUCCESS
 } from "./actions";
 export const getSelectedTags = state => state.filtering.selectedTags;
 export const getSorting = state => state.filtering.sorting;
+
+function* postSubmission(action) {
+  try {
+    const { submission, submissionType } = action;
+    const result = yield call(api.postSubmission, submission, submissionType);
+    console.log(result);
+    yield put({ type: POST_SUBMISSION_SUCCESS });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* watchPostSubmission() {
+  yield takeEvery(POST_SUBMISSION, postSubmission);
+}
 
 function* getSubmissions() {
   try {
@@ -64,6 +81,7 @@ export default function* submissionsSagas() {
   yield all([
     watchGetSubmissions(),
     watchUpvoteSubmission(),
-    watchDownvoteSubmission()
+    watchDownvoteSubmission(),
+    watchPostSubmission()
   ]);
 }

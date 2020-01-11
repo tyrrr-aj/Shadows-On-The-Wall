@@ -1,4 +1,5 @@
 import { serverURL } from "../../constants";
+import { submissionTypes } from "../../Utils/submissionTypes";
 
 export function fetchSubmissions() {
   return [
@@ -35,4 +36,10 @@ export function upvoteSubmission(id) {
 
 export function downvoteSubmission(id) {
   return id;
+}
+
+export function postSubmission(submission, submissionType) {
+  const url = `${serverURL}/${submissionType}/new`;
+  console.log(submission);
+  return "zajebiscie";
 }
