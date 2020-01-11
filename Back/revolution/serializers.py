@@ -37,3 +37,19 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['user', 'text', 'date_time']
+
+
+class NodeSerializer(serializers.Serializer):
+    pk = serializers.IntegerField()
+    votes = serializers.IntegerField()
+    date = serializers.DateTimeField()
+
+
+class GraphSerializer(serializers.Serializer):
+    root = NodeSerializer()
+    nodes = NodeSerializer(many=True)
+    edges = serializers.ListSerializer(
+        child=serializers.ListSerializer(
+            child=serializers.IntegerField()
+        ))
+
