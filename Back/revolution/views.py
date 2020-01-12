@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 
 from revolution.models import Problem, Tag, Comment, AppUser, Entry, Initiative, Solution
-from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer,\
+from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer, \
     CommentSerializer, AppUserDetailsSerializer, GraphSerializer, SolutionSerializer, \
     InitiativeSerializer, SubmissionSerializer
 
@@ -50,9 +50,9 @@ class ProblemViewSet(viewsets.ViewSet):
 def add_problem(request):
     if request.method == 'POST':
         problem = Problem.objects.create(user=AppUser.objects.get(pk=request.data['author']),
-                               title=request.data['title'],
-                               description=request.data['description'],
-                               )
+                                         title=request.data['title'],
+                                         description=request.data['description'],
+                                         )
         for tag_name in request.data['tags']:
             tag, _ = Tag.objects.get_or_create(name=tag_name)
             problem.tags.add(tag)
@@ -281,5 +281,6 @@ class SubmissionsViewSet(viewsets.ViewSet):
             submissions = sorted(list(submissions), key=comparator, reverse=True)
         serializer = SubmissionSerializer(submissions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 list_submissions = SubmissionsViewSet.as_view({'get': 'retrieve_submissions'})
