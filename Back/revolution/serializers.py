@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from revolution.models import Problem, AppUser, Tag
 
-from datetime import datetime
-
 
 class ProblemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,14 +22,21 @@ class TagSerializer(serializers.ModelSerializer):
 
 class NodeSerializer(serializers.Serializer):
     pk = serializers.IntegerField()
+    type = serializers.CharField(required=False)
     votes = serializers.IntegerField()
     date = serializers.DateTimeField()
+
+
+class EdgeSerializer(serializers.Serializer):
+    start = serializers.IntegerField()
+    end = serializers.IntegerField()
+    start_type = serializers.CharField(required=False)
+    end_type = serializers.CharField(required=False)
 
 
 class GraphSerializer(serializers.Serializer):
     root = NodeSerializer()
     nodes = NodeSerializer(many=True)
     edges = serializers.ListSerializer(
-        child=serializers.ListSerializer(
-            child=serializers.IntegerField()
-        ))
+        child=EdgeSerializer()
+    )

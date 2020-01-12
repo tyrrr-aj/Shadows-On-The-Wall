@@ -18,6 +18,10 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "react-upvote": "0.0.2",
+<<<<<<< Updated upstream
+=======
+    "react-vis-force": "^0.3.1",
+>>>>>>> Stashed changes
     "reactjs-popup": "^1.5.0",
     "redux": "^4.0.4",
     "redux-saga": "^1.1.1"
