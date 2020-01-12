@@ -2,7 +2,7 @@ from django.http import HttpResponse
 
 from revolution.models import Problem, Tag, Comment, AppUser, Entry, Initiative, Solution
 from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer,\
-    CommentSerializer, AppUserDetailsSerializer, GraphSerializer, SolutionSerializer
+    CommentSerializer, AppUserDetailsSerializer, GraphSerializer, SolutionSerializer, InitiativeSerializer
 
 from rest_framework import generics, viewsets
 from rest_framework.decorators import action
@@ -31,10 +31,6 @@ class ProblemViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-# class AddProblem(generics.CreateAPIView):
-#     queryset = Problem.objects.all()
-#     serializer_class = NewProblemSerializer
-
 @api_view(['POST'])
 def add_problem(request):
     if request.method == 'POST':
@@ -48,6 +44,35 @@ def add_problem(request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 problem_details = ProblemViewSet.as_view({'get': 'retrieve_problem'})
+
+
+class InitiativeViewSet(viewsets.ViewSet):
+    @action(detail=True, methods=['GET'])
+    def retrieve_initiative(self, request, pk):
+        initiative = get_object_or_404(Initiative, pk=pk)
+        serializer = InitiativeSerializer(initiative)
+        return Response(serializer.data)
+
+
+initiative_details = InitiativeViewSet.as_view({'get': 'retrieve_initiative'})
+
+
+@api_view(['POST'])
+def add_initiative(request):
+    if request.method == 'POST':
+        parameters = {
+            'user': AppUser.objects.get(pk=request.data['author']),
+            'title': request.data['title'],
+            'description': request.data['description'],
+        }
+        if 'improvement_of' in request.data.keys():
+            origin = Initiative.objects.get(pk=request.data['improvement_of'])
+            parameters['improvement_of'] = origin
+        initiative = Initiative.objects.create(**parameters)
+        for tag_name in request.data['tags']:
+            initiative.tags.add(Tag.objects.get(name=tag_name))
+        return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class AddCommentMixin:

@@ -56,7 +56,7 @@ class Problem(Entry):
     solutions = models.ManyToManyField('Solution', blank=True, default=None)
     # TODO: on delete entry - delete solutions!
 
-    tags = models.ManyToManyField(Tag, null=True, default=None)
+    tags = models.ManyToManyField(Tag, default=None)
 
     def get_graph(self):
         date = self.date_time.ctime()
@@ -130,9 +130,20 @@ class Solution(Entry, TraversableMixin):
         else:
             return self.improvement_of.pk
 
+
 class Initiative(Entry, TraversableMixin):
-    improvements = models.ManyToManyField('self', blank=True, default=None)
     tags = models.ManyToManyField(Tag)
+
+    improvement_of = models.ForeignKey('self', null=True, blank=True, default=None, on_delete=models.SET_NULL)
+
+    def get_improvement_of_id(self):
+        if self.improvement_of is None:
+            return None
+        else:
+            return self.improvement_of.pk
+
+    def get_subinitiatives(self):
+        return Initiative.objects.filter(improvement_of=self)
 
 
 class Node:

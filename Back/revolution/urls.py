@@ -11,6 +11,8 @@ urlpatterns = [
     path('solution/<int:pk>', views.retrieve_solution),
     path('solution/<int:pk>/add_comment', views.AddCommentToSolution.as_view()),
 
+    path('initiative/new', views.add_initiative),
+    path('initiative/<int:pk>', views.initiative_details),
     path('initiative/<int:pk>/graph', views.initiative_graph),
     path('initiative/<int:pk>/add_comment', views.AddCommentToInitiative.as_view()),
 
