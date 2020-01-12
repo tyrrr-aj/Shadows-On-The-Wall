@@ -7,6 +7,11 @@ import "./App.css";
 import AddProblem from "./components/AddProblem/AddProblem";
 import AddInitiative from "./components/AddInitiative/AddInitiative";
 import EditProblem from "./components/EditProblem/EditProblem";
+<<<<<<< Updated upstream
+=======
+import ProblemGraph from "./components/ProblemGraph/ProblemGraph";
+import InitiativeGraph from "./components/InitiativeGraph/InitiativeGraph";
+>>>>>>> Stashed changes
 
 const store = configureStore();
 
@@ -17,8 +22,15 @@ function App() {
         <BrowserRouter>
           <Switch>
             <Route path="/problem/new" component={AddProblem} />
+<<<<<<< Updated upstream
             <Route path="/problem/:id" component={EditProblem} />
             <Route path="/initiative/new" component={AddInitiative} />
+=======
+            <Route path="/problem/:id/graph" component={ProblemGraph} />
+            <Route path="/problem/:id" component={EditProblem} />
+            <Route path="/initiative/new" component={AddInitiative} />
+            <Route path="/initiative/:id/graph" component={InitiativeGraph} />
+>>>>>>> Stashed changes
             <Route path="/" component={Home} />
           </Switch>
         </BrowserRouter>
