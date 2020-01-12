@@ -2,12 +2,24 @@ from django.http import HttpResponse
 
 from revolution.models import Problem, Tag, Comment, AppUser, Entry, Initiative, Solution
 from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer,\
-    CommentSerializer, AppUserDetailsSerializer, GraphSerializer
+    CommentSerializer, AppUserDetailsSerializer, GraphSerializer, SolutionSerializer
 
 from rest_framework import generics, viewsets
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
+from rest_framework import status
+
+
+class SolutionViewSet(viewsets.ViewSet):
+    @action(detail=True, methods=['GET'])
+    def retrieve_solution(self, request, pk):
+        solution = get_object_or_404(Solution, pk=pk)
+        serializer = SolutionSerializer(solution)
+        return Response(serializer.data)
+
+
+retrieve_solution = SolutionViewSet.as_view({'get': 'retrieve_solution'})
 
 
 class ProblemViewSet(viewsets.ViewSet):
@@ -18,12 +30,12 @@ class ProblemViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-problem_details = ProblemViewSet.as_view({'get': 'retrieve_problem'})
-
-
-class NewProblem(generics.CreateAPIView):
+class AddProblem(generics.CreateAPIView):
     queryset = Problem.objects.all()
     serializer_class = NewProblemSerializer
+
+
+problem_details = ProblemViewSet.as_view({'get': 'retrieve_problem'})
 
 
 class AddCommentMixin:

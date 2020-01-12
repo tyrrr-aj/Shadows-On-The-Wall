@@ -115,7 +115,13 @@ class TraversableMixin:
 class Solution(Entry, TraversableMixin):
     improvements = models.ManyToManyField('self', blank=True, default=None)
     source_problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
+    improvement_of = models.ForeignKey('self', null=True, blank=True, default=None, on_delete=models.SET_NULL)
 
+    def get_improvement_of_id(self):
+        if self.improvement_of is None:
+            return None
+        else:
+            return self.improvement_of.pk
 
 class Initiative(Entry, TraversableMixin):
     improvements = models.ManyToManyField('self', blank=True, default=None)

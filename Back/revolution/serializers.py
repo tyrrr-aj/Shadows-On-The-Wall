@@ -1,18 +1,17 @@
 from rest_framework import serializers
 
-from revolution.models import Problem, AppUser, Tag, Comment
-from datetime import datetime
+from revolution.models import Problem, AppUser, Tag, Comment, Solution
 
 
 class NewProblemSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=AppUser.objects.all())
+    user = serializers.PrimaryKeyRelatedField(queryset=AppUser.objects.all(), label="author")
 
     class Meta:
         model = Problem
-        fields = ['id', 'user', 'title', 'description', 'tags']
+        fields = ['user', 'title', 'description', 'tags']
 
 
-class TagSerializer(serializers.Serializer):
+class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ['name']
@@ -48,6 +47,26 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ['user', 'text']
 
 
+class CommentReadOnlySerializer(serializers.Serializer):
+    author = serializers.CharField(source='user')
+    text = serializers.CharField(max_length=5000)
+
+
+class SolutionSerializer(serializers.Serializer):
+    pk = serializers.IntegerField()
+    title = serializers.CharField(max_length=300)
+    description = serializers.CharField(max_length=5000)
+    date_time = serializers.DateTimeField()
+    votes = serializers.IntegerField()
+    author = serializers.CharField(source='solution.user')
+    comments = serializers.ListSerializer(
+        child=CommentReadOnlySerializer(
+            source='problem.comment'
+        )
+    )
+    improvement_of = serializers.IntegerField(source='get_improvement_of_id')
+
+
 class ProblemSerializer(serializers.Serializer):
     pk = serializers.IntegerField()
     title = serializers.CharField(max_length=300)
@@ -55,6 +74,20 @@ class ProblemSerializer(serializers.Serializer):
     date_time = serializers.DateTimeField()
     votes = serializers.IntegerField()
     author = serializers.CharField(source='problem.user')
+    tags = serializers.ListSerializer(
+        child=serializers.CharField(
+            source='tag.name'
+        ))
+    comments = serializers.ListSerializer(
+        child=CommentReadOnlySerializer(
+            source='problem.comment'
+        )
+    )
+    solutions = serializers.ListSerializer(
+        child=SolutionSerializer(
+            source='problem.solution'
+        )
+    )
 
 
 class NodeSerializer(serializers.Serializer):
