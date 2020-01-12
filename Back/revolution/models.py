@@ -21,7 +21,7 @@ class Comment(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
@@ -56,7 +56,7 @@ class Problem(Entry):
     solutions = models.ManyToManyField('Solution', blank=True, default=None)
     # TODO: on delete entry - delete solutions!
 
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, null=True, default=None)
 
     def get_graph(self):
         date = self.date_time.ctime()

@@ -3,14 +3,6 @@ from rest_framework import serializers
 from revolution.models import Problem, AppUser, Tag, Comment, Solution
 
 
-class NewProblemSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=AppUser.objects.all(), label="author")
-
-    class Meta:
-        model = Problem
-        fields = ['user', 'title', 'description', 'tags']
-
-
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
@@ -88,6 +80,14 @@ class ProblemSerializer(serializers.Serializer):
             source='problem.solution'
         )
     )
+
+
+class NewProblemSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=AppUser.objects.all(), label="author")
+
+    class Meta:
+        model = Problem
+        fields = ['user', 'title', 'description']
 
 
 class NodeSerializer(serializers.Serializer):

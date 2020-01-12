@@ -3,7 +3,7 @@ from revolution import views
 
 
 urlpatterns = [
-    path('problem/new', views.AddProblem.as_view()),
+    path('problem/new', views.add_problem),
     path('problem/<int:pk>', views.problem_details),
     path('problem/<int:pk>/graph', views.problem_graph),
     path('problem/<int:pk>/add_comment', views.AddCommentToProblem.as_view()),

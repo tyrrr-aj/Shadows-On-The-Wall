@@ -9,6 +9,7 @@ from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view
 
 
 class SolutionViewSet(viewsets.ViewSet):
@@ -30,10 +31,21 @@ class ProblemViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-class AddProblem(generics.CreateAPIView):
-    queryset = Problem.objects.all()
-    serializer_class = NewProblemSerializer
+# class AddProblem(generics.CreateAPIView):
+#     queryset = Problem.objects.all()
+#     serializer_class = NewProblemSerializer
 
+@api_view(['POST'])
+def add_problem(request):
+    if request.method == 'POST':
+        problem = Problem.objects.create(user=AppUser.objects.get(pk=request.data['author']),
+                               title=request.data['title'],
+                               description=request.data['description'],
+                               )
+        for tag_name in request.data['tags']:
+            problem.tags.add(Tag.objects.get(name=tag_name))
+        return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 problem_details = ProblemViewSet.as_view({'get': 'retrieve_problem'})
 
