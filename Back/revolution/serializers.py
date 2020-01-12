@@ -150,3 +150,16 @@ class GraphSerializer(serializers.Serializer):
     edges = serializers.ListSerializer(
         child=EdgeSerializer()
     )
+
+
+class SubmissionSerializer(serializers.Serializer):
+    pk = serializers.IntegerField()
+    title = serializers.CharField(max_length=300)
+    description = serializers.CharField(max_length=5000)
+    date_time = serializers.DateTimeField()
+    votes = serializers.IntegerField()
+    author = serializers.CharField(source='initiative.user')
+    tags = serializers.ListSerializer(
+        child=serializers.CharField(
+            source='tag.name'
+        ))

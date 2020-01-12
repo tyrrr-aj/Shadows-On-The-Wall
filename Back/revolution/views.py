@@ -2,7 +2,8 @@ from django.http import HttpResponse
 
 from revolution.models import Problem, Tag, Comment, AppUser, Entry, Initiative, Solution
 from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer,\
-    CommentSerializer, AppUserDetailsSerializer, GraphSerializer, SolutionSerializer, InitiativeSerializer
+    CommentSerializer, AppUserDetailsSerializer, GraphSerializer, SolutionSerializer, \
+    InitiativeSerializer, SubmissionSerializer
 
 from rest_framework import generics, viewsets
 from rest_framework.decorators import action
@@ -162,3 +163,29 @@ class GraphViewSet(viewsets.ViewSet):
 problem_graph = GraphViewSet.as_view({'get': 'retrieve_problem'})
 initiative_graph = GraphViewSet.as_view({'get': 'retrieve_initiative'})
 
+
+class SubmissionsViewSet(viewsets.ViewSet):
+    @action(detail=True, methods=['GET'])
+    def retrieve_submissions(self, request):
+        problems = Problem.objects.only('pk', 'user', 'title', 'description', 'votes', 'date_time', 'tags')
+        initiatives = Initiative.objects.only('pk', 'user', 'title', 'description', 'votes', 'date_time', 'tags')
+        submissions = problems.union(initiatives)
+        submissions = set(submissions)
+        # given_tags = self.request.query_params.get('tags', None)
+        # if given_tags:
+        #     given_tags = set(given_tags.split(chr(18))[0].split('\x18'))
+        #     submissions = filter(lambda submission: given_tags & set(submission.tags), submissions)
+        # sort_method = self.request.query_params.get('sort', None)
+        # if sort_method:
+        #     if sort_method == 'votes':
+        #         comparator = lambda submission: submissions.votes
+        #     elif sort_method == 'time':
+        #         comparator = lambda submission: submission.date_time
+        #     else:
+        #         return Response(status=status.HTTP_400_BAD_REQUEST)
+        #     submissions = sorted(list(submissions), key=comparator)
+        serializer = SubmissionSerializer(submissions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        # return Response(status=status.HTTP_400_BAD_REQUEST)
+
+list_submissions = SubmissionsViewSet.as_view({'get': 'retrieve_submissions'})
