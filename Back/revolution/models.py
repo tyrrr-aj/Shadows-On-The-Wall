@@ -40,13 +40,13 @@ class Entry(models.Model):
     votes = models.IntegerField(default=0)
 
     def upvote(self):
-        pass
+        self.votes += 1
 
     def downvote(self):
-        pass
+        self.votes -= 1
 
     def add_comment(self, comment):
-        comm = self.comments.add(comment)
+        self.comments.add(comment)
 
     def __str__(self):
         return self.title
@@ -133,6 +133,7 @@ class Solution(Entry, TraversableMixin):
 
 class Initiative(Entry, TraversableMixin):
     tags = models.ManyToManyField(Tag)
+    improvements = models.ManyToManyField('self', blank=True, default=None)
 
     improvement_of = models.ForeignKey('self', null=True, blank=True, default=None, on_delete=models.SET_NULL)
 

@@ -31,11 +31,11 @@ class AppUserDetailsSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=AppUser.objects.all())
+    author = serializers.PrimaryKeyRelatedField(queryset=AppUser.objects.all(), source='user')
 
     class Meta:
         model = Comment
-        fields = ['user', 'text']
+        fields = ['author', 'text']
 
 
 class CommentReadOnlySerializer(serializers.Serializer):
