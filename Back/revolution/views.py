@@ -74,22 +74,21 @@ def add_solution(request, pk, source):
             'description': request.data['description'],
         }
 
-        if 'improvement_of' in request.data.keys():
-            if source == 'problem':
-                origin = Problem.objects.get(pk=pk)
-                parameters['improvement_of'] = origin
-                parameters['source_problem'] = origin
-            else:
-                origin = Solution.objects.get(pk=pk)
-                parameters['improvement_of'] = origin
-                parameters['source_problem'] = origin.source_problem
+        if source == 'problem':
+            origin = Problem.objects.get(pk=pk)
+            parameters['source_problem'] = origin
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            origin = Solution.objects.get(pk=pk)
+            parameters['improvement_of'] = origin
+            parameters['source_problem'] = origin.source_problem
 
         solution = Solution.objects.create(**parameters)
-        for tag_name in request.data['tags']:
-            tag, _ = Tag.objects.get_or_create(name=tag_name)
-            solution.tags.add(tag)
+
+        if source == 'problem':
+            origin.solutions.add(solution)
+        else:
+            origin.improvements.add(solution)
+
         return Response(status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
