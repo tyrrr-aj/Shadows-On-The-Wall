@@ -1,6 +1,8 @@
-import datetime
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+
+
 # Create your models here.
 
 
@@ -12,14 +14,14 @@ class AppUser(User):
 class Comment(models.Model):
     user = models.ForeignKey(AppUser, null=True, on_delete=models.SET_NULL)
     text = models.CharField(max_length=5000)
-    date_time = models.DateTimeField(default=datetime.datetime.now)
+    date_time = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.text
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
@@ -30,7 +32,7 @@ class Entry(models.Model):
 
     title = models.CharField(max_length=300)
     description = models.CharField(max_length=5000)
-    date_time = models.DateTimeField(default=datetime.datetime.now)
+    date_time = models.DateTimeField(default=timezone.now)
 
     comments = models.ManyToManyField(Comment, blank=True, default=None)
     # TODO: on delete entry - delete comments!
@@ -38,14 +40,13 @@ class Entry(models.Model):
     votes = models.IntegerField(default=0)
 
     def upvote(self):
-        pass
+        self.votes += 1
 
     def downvote(self):
-        pass
+        self.votes -= 1
 
     def add_comment(self, comment):
-        comm = self.comments.add(comment)
-        comm.save()
+        self.comments.add(comment)
 
     def __str__(self):
         return self.title
@@ -55,7 +56,7 @@ class Problem(Entry):
     solutions = models.ManyToManyField('Solution', blank=True, default=None)
     # TODO: on delete entry - delete solutions!
 
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, default=None)
 
     def get_graph(self):
         date = self.date_time.ctime()
@@ -121,11 +122,29 @@ class TraversableMixin:
 class Solution(Entry, TraversableMixin):
     improvements = models.ManyToManyField('self', blank=True, default=None)
     source_problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
+    improvement_of = models.ForeignKey('self', null=True, blank=True, default=None, on_delete=models.SET_NULL)
+
+    def get_improvement_of_id(self):
+        if self.improvement_of is None:
+            return None
+        else:
+            return self.improvement_of.pk
 
 
 class Initiative(Entry, TraversableMixin):
-    improvements = models.ManyToManyField('self', blank=True, default=None)
     tags = models.ManyToManyField(Tag)
+    improvements = models.ManyToManyField('self', blank=True, default=None)
+
+    improvement_of = models.ForeignKey('self', null=True, blank=True, default=None, on_delete=models.SET_NULL)
+
+    def get_improvement_of_id(self):
+        if self.improvement_of is None:
+            return None
+        else:
+            return self.improvement_of.pk
+
+    def get_subinitiatives(self):
+        return Initiative.objects.filter(improvement_of=self)
 
 
 class Node:
