@@ -6,37 +6,7 @@ import {
   ForceGraphLink
 } from "react-vis-force";
 
-const graphData = {
-  root: {
-    pk: 1,
-    votes: 0,
-    date: "Sat Jan 11 19:50:36 2020"
-  },
-  nodes: [
-    {
-      pk: 10,
-      votes: 2,
-      date: "Sat Jan 11 19:21:47 2020"
-    },
-    {
-      pk: 11,
-      votes: 0,
-      date: "Sat Jan 11 19:23:12 2020"
-    }
-  ],
-  edges: [
-    {
-      source: 1,
-      end: 10
-    },
-    {
-      source: 1,
-      end: 11
-    }
-  ]
-};
-
-const InitiativeGraph = props => {
+const InitiativeGraph = ({ graphData }) => {
   const prepareNodes = graphData => {
     const nodes = Object.assign([], graphData.nodes);
     const root = Object.assign({}, graphData.root);

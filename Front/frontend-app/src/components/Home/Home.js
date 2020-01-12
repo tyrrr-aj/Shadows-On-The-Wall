@@ -9,7 +9,6 @@ const Home = props => {
   return (
     <Fragment>
       <Header />
-      Home
       <Grid container item xs={12}>
         <TagPanel />
         <Submissions />

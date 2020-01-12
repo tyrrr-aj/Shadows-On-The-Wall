@@ -51,35 +51,31 @@ const TagPanel = ({ tags, getTags, getSubmissions, setSelectedTags }) => {
       <Typography variant="h6" className={classes.title}>
         Tags
       </Typography>
-      <div className={"scroll-container"}>
-        <CustomScroll heightRelativeToParent="100%">
-          <List classes={classes.root}>
-            {tags.map(tag => {
-              const labelId = `checkbox-list-label-${tag}`;
-              return (
-                <ListItem
-                  key={tag}
-                  role={undefined}
-                  dense
-                  button
-                  onClick={handleToggle(tag)}
-                >
-                  <ListItemIcon>
-                    <Checkbox
-                      edge="start"
-                      checked={checked.indexOf(tag) !== -1}
-                      tabIndex={-1}
-                      disableRipple
-                      inputProps={{ "aria-labelledby": labelId }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText id={labelId} primary={tag} />
-                </ListItem>
-              );
-            })}
-          </List>
-        </CustomScroll>
-      </div>
+      <List classes={classes.root}>
+        {tags.map(tag => {
+          const labelId = `checkbox-list-label-${tag}`;
+          return (
+            <ListItem
+              key={tag}
+              role={undefined}
+              dense
+              button
+              onClick={handleToggle(tag)}
+            >
+              <ListItemIcon>
+                <Checkbox
+                  edge="start"
+                  checked={checked.indexOf(tag) !== -1}
+                  tabIndex={-1}
+                  disableRipple
+                  inputProps={{ "aria-labelledby": labelId }}
+                />
+              </ListItemIcon>
+              <ListItemText id={labelId} primary={tag} />
+            </ListItem>
+          );
+        })}
+      </List>
     </Grid>
   );
 };

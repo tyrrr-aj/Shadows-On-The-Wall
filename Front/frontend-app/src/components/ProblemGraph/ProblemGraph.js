@@ -16,7 +16,7 @@ const ProblemGraph = ({ graphData, getSubmission }) => {
       return {
         id: `${node.type}-${node.pk}`,
         label: node.pk,
-        metric: node.metric,
+        metric: node.metric * 5,
         type: node.type
       };
     });
@@ -40,7 +40,6 @@ const ProblemGraph = ({ graphData, getSubmission }) => {
   return (
     <div>
       <InteractiveForceGraph
-        simulationOptions={{ height: 300, width: 300 }}
         labelAttr="label"
         onSelectNode={(event, node) => handleSelectNode(node.pk, node.type)}
         highlightDependencies

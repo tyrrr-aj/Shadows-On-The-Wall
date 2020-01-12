@@ -29,12 +29,7 @@ const ProblemMainPanel = ({ problem }) => {
         />
       </div>
       {problem.solutions
-        ? problem.solutions.map(solution => (
-            <Solution
-              parentSubmissionType={submissionTypes.problem}
-              solution={solution}
-            />
-          ))
+        ? problem.solutions.map(solution => <Solution solution={solution} />)
         : null}
     </Grid>
   );

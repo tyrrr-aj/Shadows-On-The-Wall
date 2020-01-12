@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery } from "redux-saga/effects";
+import { all, call, put, takeEvery, select } from "redux-saga/effects";
 import * as api from "./api";
 
 import {
@@ -10,6 +10,9 @@ import {
   ADD_SOLUTION
 } from "./actions";
 import { submissionTypes } from "../../Utils/submissionTypes";
+
+export const getCurrentSubmissionId = state =>
+  state.currentSubmission.submission.pk;
 
 function* getSubmission(action) {
   try {
@@ -34,13 +37,12 @@ function* addComment(action) {
       action.submissionType,
       action.comment
     );
+    const currentSubmissionId = yield select(getCurrentSubmissionId);
     yield put({ type: ADD_COMMENT_SUCCESS });
     yield put({
       type: GET_SUBMISSION,
-      id: action.id,
-      submissionType: action.parentSubmissionType
-        ? action.parentSubmissionType
-        : action.submissionType
+      id: currentSubmissionId,
+      submissionType: submissionTypes.problem
     });
   } catch (error) {
     console.log(error);

@@ -1,6 +1,6 @@
 import React, { useEffect, memo } from "react";
 import SubmissionListItem from "./SubmissionListItem";
-import { Grid, List } from "@material-ui/core";
+import { Grid, List, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { getSubmissions } from "../../../modules/Submissions/actions";
@@ -20,6 +20,7 @@ const SubmissionList = ({ submissions, getSubmissions }) => {
 
   return (
     <Grid container item xs={6}>
+      <Typography variant="h6">Submissions</Typography>
       <List classes={classes}>
         {submissions.map(submission => {
           return <SubmissionListItem submission={submission} />;
