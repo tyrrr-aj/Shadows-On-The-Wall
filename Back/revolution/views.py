@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 
 from revolution.models import Problem, Tag, Comment, AppUser, Entry, Initiative, Solution
-from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer,\
+from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer, \
     CommentSerializer, AppUserDetailsSerializer, GraphSerializer, SolutionSerializer, \
     InitiativeSerializer, SubmissionSerializer
 
@@ -36,13 +36,11 @@ class ProblemViewSet(viewsets.ViewSet):
 def add_problem(request):
     if request.method == 'POST':
         problem = Problem.objects.create(user=AppUser.objects.get(pk=request.data['author']),
-                               title=request.data['title'],
-                               description=request.data['description'],
-                               )
+                                         title=request.data['title'],
+                                         description=request.data['description'],
+                                         )
         for tag_name in request.data['tags']:
-            if Tag.objects.get(name=tag_name):
-                Tag.objects.create(name=tag_name)
-            problem.tags.add(Tag.objects.get(name=tag_name))
+            problem.tags.add(Tag.objects.get_or_create(name=tag_name)[0])
 
         return Response(status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -75,7 +73,7 @@ def add_initiative(request):
             parameters['improvement_of'] = origin
         initiative = Initiative.objects.create(**parameters)
         for tag_name in request.data['tags']:
-            initiative.tags.add(Tag.objects.get(name=tag_name))
+            initiative.tags.add(Tag.objects.get_or_create(name=tag_name)[0])
         return Response(status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
