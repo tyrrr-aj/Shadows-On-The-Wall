@@ -22,7 +22,7 @@ const Solution = ({ solution }) => {
         description={solution.description}
         tags={solution.tags}
         author={solution.author}
-        rating={solution.votes}
+        votes={solution.votes}
       />
       <Discussion
         pk={solution.pk}

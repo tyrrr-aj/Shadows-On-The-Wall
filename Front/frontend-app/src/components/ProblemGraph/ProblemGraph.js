@@ -5,6 +5,13 @@ import {
   ForceGraphNode,
   ForceGraphLink
 } from "react-vis-force";
+import { makeStyles } from "@material-ui/styles";
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    height: "100%"
+  }
+}));
 
 const ProblemGraph = ({ graphData, getSubmission }) => {
   const prepareNodes = graphData => {

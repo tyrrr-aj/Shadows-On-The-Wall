@@ -19,7 +19,7 @@ const ProblemMainPanel = ({ problem }) => {
           description={problem.description}
           tags={problem.tags}
           author={problem.author}
-          rating={problem.rating}
+          votes={problem.votes}
         />
 
         <Discussion

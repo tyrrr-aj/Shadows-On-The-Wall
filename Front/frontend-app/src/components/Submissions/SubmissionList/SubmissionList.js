@@ -19,7 +19,7 @@ const SubmissionList = ({ submissions, getSubmissions }) => {
   const classes = useStyles();
 
   return (
-    <Grid container item xs={6}>
+    <Grid direction={"column"} justify="center" container item xs={9}>
       <Typography variant="h6">Submissions</Typography>
       <List classes={classes}>
         {submissions.map(submission => {

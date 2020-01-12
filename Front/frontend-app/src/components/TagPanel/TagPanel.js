@@ -47,10 +47,8 @@ const TagPanel = ({ tags, getTags, getSubmissions, setSelectedTags }) => {
   };
 
   return (
-    <Grid container item xs={3}>
-      <Typography variant="h6" className={classes.title}>
-        Tags
-      </Typography>
+    <Grid direction={"column"} container item xs={3}>
+      <Typography variant="h6">Tags</Typography>
       <List classes={classes.root}>
         {tags.map(tag => {
           const labelId = `checkbox-list-label-${tag}`;

@@ -10,7 +10,7 @@ const Header = props => {
   return (
     <Fragment>
       <Container component={"main"} maxWidth={"lg"}>
-        <Grid container spacing={0}>
+        <Grid justify={"space-around"} container spacing={0}>
           <Link to={"/problem/new"}>
             <Button variant="contained">New Problem</Button>
           </Link>

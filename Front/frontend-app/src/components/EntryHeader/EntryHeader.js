@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const EntryHeader = ({ title, description, author, rating, tags }) => {
+const EntryHeader = ({ title, description, author, votes, tags }) => {
   const classes = useStyles();
   return (
     <Grid container>
@@ -36,7 +36,12 @@ const EntryHeader = ({ title, description, author, rating, tags }) => {
       </Grid>
       <Grid item xs={3}>
         <TextField name={"author"} label={"author"} value={author} disabled />
-        <TextField name={"rating"} label={"rating"} value={rating} disabled />
+        <TextField
+          name={"votes"}
+          label={"votes"}
+          value={votes || "0"}
+          disabled
+        />
         {tags ? (
           <TextField name={"tags"} label={"Tags"} value={tags || ""} disabled />
         ) : null}

@@ -1,8 +1,11 @@
 import { serverURL } from "../../constants";
 import { submissionTypes } from "../../Utils/submissionTypes";
+import queryString from "query-string";
 
-export function fetchSubmissions() {
-  const url = `${serverURL}submissions`;
+export function fetchSubmissions(tags, sorting) {
+  console.log(tags, sorting);
+  const query = queryString.stringify({ tags: tags, sorting: sorting });
+  const url = `${serverURL}submissions?${query}`;
   return fetch(url).then(response => response.json());
 }
 
