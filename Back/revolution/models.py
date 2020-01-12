@@ -1,6 +1,8 @@
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
+
+
 # Create your models here.
 
 
@@ -19,7 +21,7 @@ class Comment(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
@@ -30,7 +32,7 @@ class Entry(models.Model):
 
     title = models.CharField(max_length=300)
     description = models.CharField(max_length=5000)
-    date_time = models.DateTimeField(default=datetime.datetime.now)
+    date_time = models.DateTimeField(default=datetime.datetime.now())  # default=datetime.datetime.now)
 
     comments = models.ManyToManyField(Comment, blank=True, default=None)
     # TODO: on delete entry - delete comments!
@@ -45,7 +47,6 @@ class Entry(models.Model):
 
     def add_comment(self, comment):
         comm = self.comments.add(comment)
-        comm.save()
 
     def __str__(self):
         return self.title
@@ -55,7 +56,7 @@ class Problem(Entry):
     solutions = models.ManyToManyField('Solution', blank=True, default=None)
     # TODO: on delete entry - delete solutions!
 
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, null=True, default=None)
 
     def get_graph(self):
         date = self.date_time.ctime()
@@ -121,7 +122,13 @@ class TraversableMixin:
 class Solution(Entry, TraversableMixin):
     improvements = models.ManyToManyField('self', blank=True, default=None)
     source_problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
+    improvement_of = models.ForeignKey('self', null=True, blank=True, default=None, on_delete=models.SET_NULL)
 
+    def get_improvement_of_id(self):
+        if self.improvement_of is None:
+            return None
+        else:
+            return self.improvement_of.pk
 
 class Initiative(Entry, TraversableMixin):
     improvements = models.ManyToManyField('self', blank=True, default=None)

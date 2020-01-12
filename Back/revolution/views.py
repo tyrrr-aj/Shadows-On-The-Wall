@@ -1,30 +1,123 @@
+from django.http import HttpResponse
+
+from revolution.models import Problem, Tag, Comment, AppUser, Entry, Initiative, Solution
+from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer,\
+    CommentSerializer, AppUserDetailsSerializer, GraphSerializer, SolutionSerializer
+
 from rest_framework import generics, viewsets
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-
-from revolution.models import Problem, Initiative, Tag
-from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer, GraphSerializer
-
-
-class ProblemDetails(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Problem.objects.all()
-    serializer_class = NewProblemSerializer
+from rest_framework import status
+from rest_framework.decorators import api_view
 
 
-class NewProblem(generics.CreateAPIView):
-    queryset = Problem.objects.all()
-    serializer_class = NewProblemSerializer
+class SolutionViewSet(viewsets.ViewSet):
+    @action(detail=True, methods=['GET'])
+    def retrieve_solution(self, request, pk):
+        solution = get_object_or_404(Solution, pk=pk)
+        serializer = SolutionSerializer(solution)
+        return Response(serializer.data)
 
 
-class TagList(generics.ListAPIView):
+retrieve_solution = SolutionViewSet.as_view({'get': 'retrieve_solution'})
+
+
+class ProblemViewSet(viewsets.ViewSet):
+    @action(detail=True, methods=['GET'])
+    def retrieve_problem(self, request, pk):
+        problem = get_object_or_404(Problem, pk=pk)
+        serializer = ProblemSerializer(problem)
+        return Response(serializer.data)
+
+
+# class AddProblem(generics.CreateAPIView):
+#     queryset = Problem.objects.all()
+#     serializer_class = NewProblemSerializer
+
+@api_view(['POST'])
+def add_problem(request):
+    if request.method == 'POST':
+        problem = Problem.objects.create(user=AppUser.objects.get(pk=request.data['author']),
+                               title=request.data['title'],
+                               description=request.data['description'],
+                               )
+        for tag_name in request.data['tags']:
+            problem.tags.add(Tag.objects.get(name=tag_name))
+        return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+problem_details = ProblemViewSet.as_view({'get': 'retrieve_problem'})
+
+
+class AddCommentMixin:
+    def add_comment(self, entry, content):
+        serializer = CommentSerializer(data=content)
+        if serializer.is_valid():
+            comment = serializer.save()
+            entry.add_comment(comment)
+
+
+class AddCommentToProblem(generics.CreateAPIView, AddCommentMixin):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def post(self, request, *args, **kwargs):
+        entry = get_object_or_404(Problem, pk=kwargs["pk"])
+        self.add_comment(entry, request.data)
+        return HttpResponse(status=200)
+
+
+class AddCommentToInitiative(generics.CreateAPIView, AddCommentMixin):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def post(self, request, *args, **kwargs):
+        entry = get_object_or_404(Initiative, pk=kwargs["pk"])
+        self.add_comment(entry, request.data)
+        return HttpResponse(status=200)
+
+
+class AddCommentToSolution(generics.CreateAPIView, AddCommentMixin):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def post(self, request, *args, **kwargs):
+        entry = get_object_or_404(Solution, pk=kwargs["pk"])
+        self.add_comment(entry, request.data)
+        return HttpResponse(status=200)
+
+
+class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+    @action(detail=True, methods=['GET'])
+    def retrieve_filtered_tags(self, request):
+        queryset = Tag.objects.all()
+        phrase = self.request.query_params.get('name', None)
+        if phrase is not None:
+            queryset = queryset.filter(name__contains=phrase)
+        return Response(list(queryset.values_list('name', flat=True)))
 
 
 class NewTag(generics.CreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+
+retrieve_all_tags = TagViewSet.as_view({'get': 'retrieve_all_tags'})
+retrieve_filtered_tags = TagViewSet.as_view({'get': 'retrieve_filtered_tags'})
+
+
+class CommentList(generics.ListAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+
+class AppUserDetails(generics.RetrieveUpdateDestroyAPIView):
+    queryset = AppUser.objects.all()
+    serializer_class = AppUserDetailsSerializer
 
 
 class GraphViewSet(viewsets.ViewSet):
@@ -43,3 +136,4 @@ class GraphViewSet(viewsets.ViewSet):
 
 problem_graph = GraphViewSet.as_view({'get': 'retrieve_problem'})
 initiative_graph = GraphViewSet.as_view({'get': 'retrieve_initiative'})
+
