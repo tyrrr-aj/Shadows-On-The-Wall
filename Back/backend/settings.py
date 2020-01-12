@@ -25,12 +25,18 @@ SECRET_KEY = 'qlzy$oupvsqam79f&71a@3##$1dt1c3m%@n87om5nhrrlbc(41'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.5.5.59', '127.0.0.1']
 
+CORS_ORIGIN_ALLOW_ALL = True # False
+
+CORS_ORIGIN_WHITELIST = (
+    'http://10.5.5.187:3000',
+)
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'revolution.apps.RevolutionConfig',
     'rest_framework',
     'django.contrib.admin',
@@ -49,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 REST_FRAMEWORK = {
