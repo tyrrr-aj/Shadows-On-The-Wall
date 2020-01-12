@@ -39,7 +39,8 @@ def add_problem(request):
                                description=request.data['description'],
                                )
         for tag_name in request.data['tags']:
-            problem.tags.add(Tag.objects.get(name=tag_name))
+            tag, _ = Tag.objects.get_or_create(name=tag_name)
+            problem.tags.add(tag)
         return Response(status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -70,7 +71,8 @@ def add_initiative(request):
             parameters['improvement_of'] = origin
         initiative = Initiative.objects.create(**parameters)
         for tag_name in request.data['tags']:
-            initiative.tags.add(Tag.objects.get(name=tag_name))
+            tag, _ = Tag.objects.get_or_create(name=tag_name)
+            initiative.tags.add(tag)
         return Response(status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -81,6 +83,9 @@ class AddCommentMixin:
         if serializer.is_valid():
             comment = serializer.save()
             entry.add_comment(comment)
+            return HttpResponse(status=200)
+        else:
+            return HttpResponse(status=400)
 
 
 class AddCommentToProblem(generics.CreateAPIView, AddCommentMixin):
@@ -89,8 +94,7 @@ class AddCommentToProblem(generics.CreateAPIView, AddCommentMixin):
 
     def post(self, request, *args, **kwargs):
         entry = get_object_or_404(Problem, pk=kwargs["pk"])
-        self.add_comment(entry, request.data)
-        return HttpResponse(status=200)
+        return self.add_comment(entry, request.data)
 
 
 class AddCommentToInitiative(generics.CreateAPIView, AddCommentMixin):
