@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from revolution.models import Problem, AppUser, Tag, Comment, Solution
+from revolution.models import Problem, AppUser, Tag, Comment, Solution, Initiative
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -79,6 +79,47 @@ class ProblemSerializer(serializers.Serializer):
         child=SolutionSerializer(
             source='problem.solution'
         )
+    )
+
+
+class SubinitiativeSerializer(serializers.Serializer):
+    pk = serializers.IntegerField()
+    title = serializers.CharField(max_length=300)
+    description = serializers.CharField(max_length=5000)
+    date_time = serializers.DateTimeField()
+    votes = serializers.IntegerField()
+    author = serializers.CharField(source='initiative.user')
+    tags = serializers.ListSerializer(
+        child=serializers.CharField(
+            source='tag.name'
+        ))
+    comments = serializers.ListSerializer(
+        child=CommentReadOnlySerializer(
+            source='initiative.comment'
+        )
+    )
+    improvement_of = serializers.IntegerField(source='get_improvement_of_id')
+
+
+class InitiativeSerializer(serializers.Serializer):
+    pk = serializers.IntegerField()
+    title = serializers.CharField(max_length=300)
+    description = serializers.CharField(max_length=5000)
+    date_time = serializers.DateTimeField()
+    votes = serializers.IntegerField()
+    author = serializers.CharField(source='initiative.user')
+    improvement_of = serializers.PrimaryKeyRelatedField(queryset=Initiative.objects.all())
+    tags = serializers.ListSerializer(
+        child=serializers.CharField(
+            source='tag.name'
+        ))
+    comments = serializers.ListSerializer(
+        child=CommentReadOnlySerializer(
+            source='initiative.comment'
+        )
+    )
+    subinitiatives = serializers.ListSerializer(
+        child=SubinitiativeSerializer(), source='get_subinitiatives'
     )
 
 
