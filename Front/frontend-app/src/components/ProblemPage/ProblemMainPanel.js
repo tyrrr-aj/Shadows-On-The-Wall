@@ -28,9 +28,9 @@ const ProblemMainPanel = ({ problem }) => {
           comments={problem.comments}
         />
       </div>
-      {problem.solutions.map(solution => (
-        <Solution solution={solution} />
-      ))}
+      {problem.solutions
+        ? problem.solutions.map(solution => <Solution solution={solution} />)
+        : null}
     </Grid>
   );
 };

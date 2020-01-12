@@ -9,7 +9,7 @@ const AddSolution = ({ location, match, postSolution, history }) => {
   const handlePostSolution = solution => {
     const id = match.params.id;
     console.log(location);
-    const type = location.pathname.contains("problem")
+    const type = location.pathname.includes("/problem/")
       ? submissionTypes.problem
       : submissionTypes.solution;
     postSolution(id, type, solution);

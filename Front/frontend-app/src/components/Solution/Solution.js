@@ -5,6 +5,7 @@ import { List, Grid, TextField } from "@material-ui/core";
 import Discussion from "../Discussion/Discussion";
 import EntryHeader from "../EntryHeader/EntryHeader";
 import "./Solution.scss";
+import { submissionTypes } from "../../Utils/submissionTypes";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,7 +24,11 @@ const Solution = ({ solution }) => {
         author={solution.author}
         rating={solution.rating}
       />
-      <Discussion comments={solution.comments} />
+      <Discussion
+        pk={solution.pk}
+        submissionType={submissionTypes.solution}
+        comments={solution.comments}
+      />
     </div>
   );
 };

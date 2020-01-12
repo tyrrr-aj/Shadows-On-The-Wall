@@ -5,7 +5,9 @@ import {
   GET_SUBMISSION,
   GET_SUBMISSION_SUCCESS,
   ADD_COMMENT_SUCCESS,
-  ADD_COMMENT
+  ADD_COMMENT,
+  ADD_SOLUTION_SUCCESS,
+  ADD_SOLUTION
 } from "./actions";
 
 function* getSubmission(action) {
@@ -42,6 +44,24 @@ function* addComment(action) {
   }
 }
 
+function* addSolution(action) {
+  try {
+    yield call(
+      api.postSolution,
+      action.id,
+      action.submissionType,
+      action.submission
+    );
+    yield put({ type: ADD_SOLUTION_SUCCESS });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* watchAddSolution() {
+  yield takeEvery(ADD_SOLUTION, addSolution);
+}
+
 function* watchAddComment() {
   yield takeEvery(ADD_COMMENT, addComment);
 }
@@ -51,5 +71,5 @@ function* watchGetSubmission() {
 }
 
 export default function* currentSubmissionSagas() {
-  yield all([watchGetSubmission(), watchAddComment()]);
+  yield all([watchGetSubmission(), watchAddComment(), watchAddSolution()]);
 }
