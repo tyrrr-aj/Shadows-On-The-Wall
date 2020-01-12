@@ -154,6 +154,7 @@ class GraphSerializer(serializers.Serializer):
 
 class SubmissionSerializer(serializers.Serializer):
     pk = serializers.IntegerField()
+    type = serializers.CharField(max_length=1)
     title = serializers.CharField(max_length=300)
     description = serializers.CharField(max_length=5000)
     date_time = serializers.DateTimeField()
