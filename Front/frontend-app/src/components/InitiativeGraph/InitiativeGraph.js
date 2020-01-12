@@ -44,7 +44,7 @@ const InitiativeGraph = props => {
 
     return nodes.map(node => {
       return {
-        id: node.pk,
+        pk: node.pk,
         label: node.pk
       };
     });
@@ -56,7 +56,7 @@ const InitiativeGraph = props => {
     });
   };
 
-  const handleSelectNode = id => {
+  const handleSelectNode = pk => {
     //show panel with details?
   };
 
@@ -72,8 +72,8 @@ const InitiativeGraph = props => {
           // TODO: size + color depends on the metric value!
           return (
             <ForceGraphNode
-              onSelectNode={() => handleSelectNode(node.id)}
-              node={{ id: node.id, label: node.label }}
+              onSelectNode={() => handleSelectNode(node.pk)}
+              node={{ pk: node.pk, label: node.label }}
               fill="red"
             />
           );

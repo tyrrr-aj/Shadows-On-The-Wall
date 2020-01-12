@@ -7,11 +7,10 @@ import "./App.css";
 import AddProblem from "./components/AddProblem/AddProblem";
 import AddInitiative from "./components/AddInitiative/AddInitiative";
 import EditProblem from "./components/EditProblem/EditProblem";
-<<<<<<< Updated upstream
-=======
-import ProblemGraph from "./components/ProblemGraph/ProblemGraph";
+import ProblemPage from "./components/ProblemPage/ProblemPage";
 import InitiativeGraph from "./components/InitiativeGraph/InitiativeGraph";
->>>>>>> Stashed changes
+import SubmissionGraphPage from "./components/SubmissionGraphPage/SubmissionGraphPage";
+import AddSolution from "./components/AddSolution/AddSolution";
 
 const store = configureStore();
 
@@ -22,15 +21,20 @@ function App() {
         <BrowserRouter>
           <Switch>
             <Route path="/problem/new" component={AddProblem} />
-<<<<<<< Updated upstream
-            <Route path="/problem/:id" component={EditProblem} />
+            <Route
+              path="/problem/:id/graph"
+              render={props => (
+                <SubmissionGraphPage {...props} isProblem={true} />
+              )}
+            />
+            <Route path="/problem/:id/addSolution" component={AddSolution} />
+            <Route path="/problem/:id" component={ProblemPage} />
             <Route path="/initiative/new" component={AddInitiative} />
-=======
-            <Route path="/problem/:id/graph" component={ProblemGraph} />
-            <Route path="/problem/:id" component={EditProblem} />
-            <Route path="/initiative/new" component={AddInitiative} />
-            <Route path="/initiative/:id/graph" component={InitiativeGraph} />
->>>>>>> Stashed changes
+            <Route path="/initiative/:id" component={ProblemPage} />
+            <Route
+              path="/initiative/:id/graph"
+              render={props => <InitiativeGraph {...props} isProblem={false} />}
+            />
             <Route path="/" component={Home} />
           </Switch>
         </BrowserRouter>

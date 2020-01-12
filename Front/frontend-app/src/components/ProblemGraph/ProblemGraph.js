@@ -6,44 +6,7 @@ import {
   ForceGraphLink
 } from "react-vis-force";
 
-const graphData = {
-  root: {
-    pk: 1,
-    type: "problem",
-    votes: 0,
-    date: "Sat Jan 11 19:50:36 2020"
-  },
-  nodes: [
-    {
-      pk: 10,
-      type: "solution",
-      votes: 2,
-      date: "Sat Jan 11 19:21:47 2020"
-    },
-    {
-      pk: 11,
-      type: "solution",
-      votes: 0,
-      date: "Sat Jan 11 19:23:12 2020"
-    }
-  ],
-  edges: [
-    {
-      source_type: "problem",
-      source: 1,
-      end_type: "solution",
-      end: 10
-    },
-    {
-      source_type: "problem",
-      source: 1,
-      end_type: "solution",
-      end: 11
-    }
-  ]
-};
-
-const ProblemGraph = props => {
+const ProblemGraph = ({ graphData, getSubmission }) => {
   const prepareNodes = graphData => {
     const nodes = Object.assign([], graphData.nodes);
     const root = Object.assign({}, graphData.root);
@@ -61,31 +24,36 @@ const ProblemGraph = props => {
   const prepareEdges = graphData => {
     return graphData.edges.map(edge => {
       return [
-        `${edge.source_type}-${edge.source}`,
+        `${edge.start_type}-${edge.start}`,
         `${edge.end_type}-${edge.end}`
       ];
     });
   };
 
-  const handleSelectNode = (id, type) => {
+  const handleSelectNode = (pk, type) => {
     //show panel with details isRoot ?
+    console.log(pk, type);
+    getSubmission(pk, type);
   };
 
   return (
     <div>
-      Problem grap h
       <InteractiveForceGraph
         simulationOptions={{ height: 300, width: 300 }}
         labelAttr="label"
-        onSelectNode={node => console.log(node)}
+        onSelectNode={(event, node) => handleSelectNode(node.pk, node.type)}
         highlightDependencies
       >
         {prepareNodes(graphData).map(node => {
           // TODO: size + color depends on the metric value!
           return (
             <ForceGraphNode
-              onSelectNode={() => handleSelectNode(node.id, node.type)}
-              node={{ id: node.id, label: node.label }}
+              node={{
+                id: node.id,
+                label: node.label,
+                pk: node.label,
+                type: node.type
+              }}
               fill="red"
             />
           );

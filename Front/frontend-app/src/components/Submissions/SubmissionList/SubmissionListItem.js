@@ -17,33 +17,71 @@ import {
   downvoteSubmission
 } from "../../../modules/Submissions/actions";
 import "./Submission.scss";
+import { withRouter } from "react-router-dom";
+import { submissionTypes } from "../../../Utils/submissionTypes";
+import moment from "moment";
+import { makeStyles } from "@material-ui/core/styles";
 
-const SubmissionListItem = ({ submission, handleUpVote, handleDownVote }) => {
+const useStyles = makeStyles(theme => ({
+  listActionButtons: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "inherit"
+  }
+}));
+
+const SubmissionListItem = ({
+  history,
+  submission,
+  handleUpVote,
+  handleDownVote
+}) => {
   const handleGoToSubmission = () => {
-    // reroute
+    history.push(`/${submission.type}/${submission.pk}`);
   };
 
   const handleUpVoteClick = () => {
-    handleUpVote(submission.id);
+    handleUpVote(submission.pk, submission.type);
   };
 
   const handleDownVoteClick = () => {
-    handleDownVote(submission.id);
+    handleDownVote(submission.pk, submission.type);
   };
+
+  const handleAddImprovementClick = () => {
+    history.push(
+      `/${submissionTypes.initiative}/new?improvementof=${submission.pk}`
+    );
+  };
+
+  const classes = useStyles();
 
   return (
     <Fragment>
       <ListItem button onClick={handleGoToSubmission}>
-        <ListItemText
-          primary={submission.title}
-          secondary={submission.description}
-        />
-        <ListItemSecondaryAction>
+        <div className={"submission-list-item-details"}>
+          <ListItemText primary={submission.title} />
+          <div className={"submission-list-item-details__footer"}>
+            <ListItemText secondary={`author: ${submission.author} `} />
+            <ListItemText secondary={`type: ${submission.type} `} />
+            <ListItemText
+              secondary={`submission date: ${moment(
+                submission.date_time
+              ).format("LLL")}`}
+            />
+          </div>
+        </div>
+        <ListItemSecondaryAction className={classes.listActionButtons}>
+          {submission.type === submissionTypes.initiative ? (
+            <Button onClick={handleAddImprovementClick} variant="contained">
+              add improvement
+            </Button>
+          ) : null}
           <div className={"submission__rating"}>
             <IconButton aria-label="upvote" onClick={handleUpVoteClick}>
               <ArrowDropUp />
             </IconButton>
-            <p className={"submission__rating__value"}>{submission.rating}</p>
+            <p className={"submission__rating__value"}>{submission.votes}</p>
             <IconButton aria-label="downvote" onClick={handleDownVoteClick}>
               <ArrowDropDown />
             </IconButton>
@@ -57,11 +95,13 @@ const SubmissionListItem = ({ submission, handleUpVote, handleDownVote }) => {
 SubmissionListItem.propTypes = {};
 
 const mapDispatchToProps = dispatch => ({
-  handleUpVote: id => {
-    dispatch(upvoteSubmission(id));
+  handleUpVote: (id, type) => {
+    dispatch(upvoteSubmission(id, type));
   },
-  handleDownVote: id => {
-    dispatch(downvoteSubmission(id));
+  handleDownVote: (id, type) => {
+    dispatch(downvoteSubmission(id, type));
   }
 });
-export default connect(null, mapDispatchToProps)(memo(SubmissionListItem));
+export default withRouter(
+  connect(null, mapDispatchToProps)(memo(SubmissionListItem))
+);

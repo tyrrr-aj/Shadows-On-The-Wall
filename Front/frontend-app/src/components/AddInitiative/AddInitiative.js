@@ -3,11 +3,16 @@ import PropTypes from "prop-types";
 import SubmissionForm from "../SubmissionForm/SubmissionForm";
 import { connect } from "react-redux";
 import { submissionTypes } from "../../Utils/submissionTypes";
-import { postSubmission } from "../../modules/Submissions/api";
+import { postSubmission } from "../../modules/Submissions/actions";
 import { withRouter } from "react-router-dom";
+import queryString from "query-string";
 
-const AddInitiative = ({ postProblem, history }) => {
+const AddInitiative = ({ match, location, postProblem, history }) => {
   const handlePostProblem = problem => {
+    const params = queryString.parse(location.search);
+    if (params.improvementof) {
+      problem.improvementof = params.improvementof;
+    }
     postProblem(problem);
     history.push("/");
   };

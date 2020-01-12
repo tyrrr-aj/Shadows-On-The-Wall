@@ -44,7 +44,11 @@ function* getSubmissions() {
 function* upvoteSubmission(action) {
   try {
     console.log("upvoteSubmission");
-    const response = yield call(api.upvoteSubmission, action.id);
+    const response = yield call(
+      api.upvoteSubmission,
+      action.id,
+      action.submissionType
+    );
     console.log(response);
     yield put({ type: SUBMISSION_UPVOTE_SUCCESS, payload: response });
     yield put({ type: GET_SUBMISSIONS });
@@ -56,7 +60,11 @@ function* upvoteSubmission(action) {
 function* downvoteSubmission(action) {
   try {
     console.log("downvoteSubmission");
-    const response = yield call(api.downvoteSubmission, action.id);
+    const response = yield call(
+      api.downvoteSubmission,
+      action.id,
+      action.submissionType
+    );
     console.log(response);
     yield put({ type: SUBMISSION_DOWNVOTE_SUCCESS, payload: response });
     yield put({ type: GET_SUBMISSIONS });
@@ -77,7 +85,7 @@ function* watchGetSubmissions() {
   yield takeEvery(GET_SUBMISSIONS, getSubmissions);
 }
 
-export default function* submissionsSagas() {
+export default function* submissionsSaga() {
   yield all([
     watchGetSubmissions(),
     watchUpvoteSubmission(),
