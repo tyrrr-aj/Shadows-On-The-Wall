@@ -1,6 +1,6 @@
-import datetime
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 # Create your models here.
@@ -14,7 +14,7 @@ class AppUser(User):
 class Comment(models.Model):
     user = models.ForeignKey(AppUser, null=True, on_delete=models.SET_NULL)
     text = models.CharField(max_length=5000)
-    date_time = models.DateTimeField(default=datetime.datetime.now)
+    date_time = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.text
@@ -32,7 +32,7 @@ class Entry(models.Model):
 
     title = models.CharField(max_length=300)
     description = models.CharField(max_length=5000)
-    date_time = models.DateTimeField(default=datetime.datetime.now())  # default=datetime.datetime.now)
+    date_time = models.DateTimeField(default=timezone.now)
 
     comments = models.ManyToManyField(Comment, blank=True, default=None)
     # TODO: on delete entry - delete comments!
