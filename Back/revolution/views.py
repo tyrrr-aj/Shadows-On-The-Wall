@@ -31,6 +31,20 @@ class ProblemViewSet(viewsets.ViewSet):
         serializer = ProblemSerializer(problem)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['GET'])
+    def upvote(self, request, pk):
+        problem = get_object_or_404(Problem, pk=pk)
+        problem.upvote()
+        problem.save()
+        return HttpResponse(status=200)
+
+    @action(detail=True, methods=['GET'])
+    def downvote(self, request, pk):
+        problem = get_object_or_404(Problem, pk=pk)
+        problem.downvote()
+        problem.save()
+        return HttpResponse(status=200)
+
 
 @api_view(['POST'])
 def add_problem(request):
@@ -45,7 +59,59 @@ def add_problem(request):
         return Response(status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
 problem_details = ProblemViewSet.as_view({'get': 'retrieve_problem'})
+problem_up = ProblemViewSet.as_view({'get': 'upvote'})
+problem_down = ProblemViewSet.as_view({'get': 'downvote'})
+
+
+@api_view(['POST'])
+def add_solution(request, pk, source):
+    if request.method == 'POST':
+        parameters = {
+            'user': AppUser.objects.get(pk=request.data['author']),
+            'title': request.data['title'],
+            'description': request.data['description'],
+        }
+
+        if 'improvement_of' in request.data.keys():
+            if source == 'problem':
+                origin = Problem.objects.get(pk=pk)
+                parameters['improvement_of'] = origin
+                parameters['source_problem'] = origin
+            else:
+                origin = Solution.objects.get(pk=pk)
+                parameters['improvement_of'] = origin
+                parameters['source_problem'] = origin.source_problem
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        solution = Solution.objects.create(**parameters)
+        for tag_name in request.data['tags']:
+            tag, _ = Tag.objects.get_or_create(name=tag_name)
+            solution.tags.add(tag)
+        return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class SolutionViewSet(viewsets.ViewSet):
+    @action(detail=True, methods=['GET'])
+    def upvote(self, request, pk):
+        solution = get_object_or_404(Solution, pk=pk)
+        solution.upvote()
+        solution.save()
+        return HttpResponse(status=200)
+
+    @action(detail=True, methods=['GET'])
+    def downvote(self, request, pk):
+        solution = get_object_or_404(Solution, pk=pk)
+        solution.upvote()
+        solution.save()
+        return HttpResponse(status=200)
+
+
+solution_up = SolutionViewSet.as_view({'get': 'upvote'})
+solution_down = SolutionViewSet.as_view({'get': 'downvote'})
 
 
 class InitiativeViewSet(viewsets.ViewSet):
@@ -55,8 +121,24 @@ class InitiativeViewSet(viewsets.ViewSet):
         serializer = InitiativeSerializer(initiative)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['GET'])
+    def upvote(self, request, pk):
+        initiative = get_object_or_404(Initiative, pk=pk)
+        initiative.upvote()
+        initiative.save()
+        return HttpResponse(status=200)
+
+    @action(detail=True, methods=['GET'])
+    def downvote(self, request, pk):
+        initiative = get_object_or_404(Initiative, pk=pk)
+        initiative.upvote()
+        initiative.save()
+        return HttpResponse(status=200)
+
 
 initiative_details = InitiativeViewSet.as_view({'get': 'retrieve_initiative'})
+initiative_up = InitiativeViewSet.as_view({'get': 'upvote'})
+initiative_down = InitiativeViewSet.as_view({'get': 'downvote'})
 
 
 @api_view(['POST'])

@@ -40,10 +40,10 @@ class Entry(models.Model):
     votes = models.IntegerField(default=0)
 
     def upvote(self):
-        pass
+        self.votes += 1
 
     def downvote(self):
-        pass
+        self.votes -= 1
 
     def add_comment(self, comment):
         self.comments.add(comment)
