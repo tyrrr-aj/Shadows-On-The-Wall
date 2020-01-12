@@ -77,7 +77,7 @@ function* watchGetSubmissions() {
   yield takeEvery(GET_SUBMISSIONS, getSubmissions);
 }
 
-export default function* submissionsSagas() {
+export default function* submissionsSaga() {
   yield all([
     watchGetSubmissions(),
     watchUpvoteSubmission(),

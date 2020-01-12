@@ -36,7 +36,7 @@ const SubmissionListItem = ({ submission, handleUpVote, handleDownVote }) => {
       <ListItem button onClick={handleGoToSubmission}>
         <ListItemText
           primary={submission.title}
-          secondary={submission.description}
+          secondary={`author: ${submission.author}`}
         />
         <ListItemSecondaryAction>
           <div className={"submission__rating"}>

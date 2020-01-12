@@ -7,6 +7,7 @@ import "./App.css";
 import AddProblem from "./components/AddProblem/AddProblem";
 import AddInitiative from "./components/AddInitiative/AddInitiative";
 import EditProblem from "./components/EditProblem/EditProblem";
+import ProblemPage from "./components/ProblemPage/ProblemPage";
 
 const store = configureStore();
 
@@ -17,7 +18,7 @@ function App() {
         <BrowserRouter>
           <Switch>
             <Route path="/problem/new" component={AddProblem} />
-            <Route path="/problem/:id" component={EditProblem} />
+            <Route path="/problem/:id" component={ProblemPage} />
             <Route path="/initiative/new" component={AddInitiative} />
             <Route path="/" component={Home} />
           </Switch>
