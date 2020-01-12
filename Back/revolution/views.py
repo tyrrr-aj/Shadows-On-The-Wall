@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 
-from revolution.models import Problem, Tag, Comment, AppUser, Entry, Initiative, Solution
+from revolution.models import Problem, Tag, Comment, AppUser, Initiative, Solution
 from revolution.serializers import ProblemSerializer, NewProblemSerializer, TagSerializer,\
     CommentSerializer, AppUserDetailsSerializer, GraphSerializer, SolutionSerializer, \
     InitiativeSerializer, SubmissionSerializer
