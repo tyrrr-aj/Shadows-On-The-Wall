@@ -134,7 +134,8 @@ class NodeSerializer(serializers.Serializer):
     pk = serializers.IntegerField()
     type = serializers.CharField(required=False)
     votes = serializers.IntegerField()
-    date = serializers.DateTimeField()
+    date = serializers.DateTimeField(source='get_formatted_date')
+    metric = serializers.IntegerField(source='get_metric')
 
 
 class EdgeSerializer(serializers.Serializer):
@@ -159,7 +160,7 @@ class SubmissionSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=5000)
     date_time = serializers.DateTimeField()
     votes = serializers.IntegerField()
-    author = serializers.CharField(source='initiative.user')
+    author = serializers.CharField(source='submission.user')
     tags = serializers.ListSerializer(
         child=serializers.CharField(
             source='tag.name'

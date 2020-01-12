@@ -1,9 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-
-
-# Create your models here.
+from datetime import datetime
 
 
 class AppUser(User):
@@ -59,7 +57,7 @@ class Problem(Entry):
     tags = models.ManyToManyField(Tag, default=None)
 
     def get_graph(self):
-        date = self.date_time.ctime()
+        date = self.date_time
         votes = self.votes
         root = Node(self.pk, votes, date, 'problem')
 
@@ -83,7 +81,7 @@ class Problem(Entry):
 
 class TraversableMixin:
     def get_graph(self, node_type=None):
-        date = self.date_time.ctime()
+        date = self.date_time
         votes = self.votes
         root = Node(self.pk, votes, date, node_type)
 
@@ -104,7 +102,7 @@ class TraversableMixin:
                 q.append(c)
 
                 # Update graph.
-                date = self.date_time.ctime()
+                date = self.date_time
                 votes = self.votes
                 if node_type:
                     new_node = Node(c.pk, votes, date, node_type)
@@ -154,6 +152,16 @@ class Node:
             self.type = node_type
         self.votes = votes
         self.date = date
+
+    def get_metric(self):
+        time_weight = len(User.objects.all())
+        time_metric = int(6 * 3600.0 / (datetime.now().replace(tzinfo=timezone.get_current_timezone()) - self.date).seconds * time_weight)
+        if time_metric > time_weight:
+            time_metric = time_weight
+        return self.votes + time_metric
+
+    def get_formatted_date(self):
+        return self.date.ctime()
 
 
 class Edge:
