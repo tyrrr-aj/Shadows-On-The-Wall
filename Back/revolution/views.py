@@ -162,3 +162,14 @@ class GraphViewSet(viewsets.ViewSet):
 problem_graph = GraphViewSet.as_view({'get': 'retrieve_problem'})
 initiative_graph = GraphViewSet.as_view({'get': 'retrieve_initiative'})
 
+
+class SubmissionsViewSet(viewsets.ViewSet):
+    @action(detail=True, methods=['GET'])
+    def retrieve_submissions(self, request):
+        submissions = Entry.objects.all()
+        tags = self.request.query_params.get('tags', None).split(chr(18))
+
+        print(tags)
+        return Response(status=status.HTTP_200_OK)
+
+list_submissions = SubmissionsViewSet.as_view({'get': 'retrieve_submissions'})
