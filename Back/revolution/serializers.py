@@ -160,7 +160,7 @@ class SubmissionSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=5000)
     date_time = serializers.DateTimeField()
     votes = serializers.IntegerField()
-    author = serializers.CharField(source='submission.user')
+    author = serializers.CharField(source='user')
     tags = serializers.ListSerializer(
         child=serializers.CharField(
             source='tag.name'
