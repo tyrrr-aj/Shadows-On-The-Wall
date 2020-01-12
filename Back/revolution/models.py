@@ -1,3 +1,4 @@
+import math
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -158,7 +159,7 @@ class Node:
         time_metric = int(6 * 3600.0 / (datetime.now().replace(tzinfo=timezone.get_current_timezone()) - self.date).seconds * time_weight)
         if time_metric > time_weight:
             time_metric = time_weight
-        return self.votes + time_metric
+        return math.sqrt(self.votes) + time_metric
 
     def get_formatted_date(self):
         return self.date.ctime()
