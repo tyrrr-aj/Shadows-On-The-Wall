@@ -167,8 +167,12 @@ initiative_graph = GraphViewSet.as_view({'get': 'retrieve_initiative'})
 class SubmissionsViewSet(viewsets.ViewSet):
     @action(detail=True, methods=['GET'])
     def retrieve_submissions(self, request):
-        problems = Problem.objects.only('pk', 'user', 'title', 'description', 'votes', 'date_time', 'tags')
-        initiatives = Initiative.objects.only('pk', 'user', 'title', 'description', 'votes', 'date_time', 'tags')
+        problems = set(Problem.objects.only('pk', 'user', 'title', 'description', 'votes', 'date_time', 'tags'))
+        initiatives = set(Initiative.objects.only('pk', 'user', 'title', 'description', 'votes', 'date_time', 'tags'))
+        for problem in problems:
+            problem.type = '0'
+        for initiative in initiatives:
+            initiative.type = '1'
         submissions = problems.union(initiatives)
         submissions = set(submissions)
         # given_tags = self.request.query_params.get('tags', None)
@@ -186,6 +190,5 @@ class SubmissionsViewSet(viewsets.ViewSet):
         #     submissions = sorted(list(submissions), key=comparator)
         serializer = SubmissionSerializer(submissions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-        # return Response(status=status.HTTP_400_BAD_REQUEST)
 
 list_submissions = SubmissionsViewSet.as_view({'get': 'retrieve_submissions'})
