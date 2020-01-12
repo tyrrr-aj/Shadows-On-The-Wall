@@ -174,16 +174,16 @@ class SubmissionsViewSet(viewsets.ViewSet):
         problems = set(Problem.objects.only('pk', 'user', 'title', 'description', 'votes', 'date_time', 'tags'))
         initiatives = set(Initiative.objects.only('pk', 'user', 'title', 'description', 'votes', 'date_time', 'tags'))
         for problem in problems:
-            problem.type = '0'
+            problem.type = 'problem'
         for initiative in initiatives:
-            initiative.type = '1'
+            initiative.type = 'initiative'
         submissions = problems.union(initiatives)
         submissions = set(submissions)
         # given_tags = self.request.query_params.get('tags', None)
         # if given_tags:
         #     given_tags = set(given_tags.split(chr(18))[0].split('\x18'))
-        #     submissions = filter(lambda submission: given_tags & set(submission.tags), submissions)
-        # sort_method = self.request.query_params.get('sort', None)
+        #     filter(lambda submission: given_tags & set(submission.tags), submissions)
+        sort_method = self.request.query_params.get('sort', None)
         # if sort_method:
         #     if sort_method == 'votes':
         #         comparator = lambda submission: submissions.votes
