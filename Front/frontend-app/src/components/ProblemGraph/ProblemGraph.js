@@ -16,6 +16,7 @@ const ProblemGraph = ({ graphData, getSubmission }) => {
       return {
         id: `${node.type}-${node.pk}`,
         label: node.pk,
+        metric: node.metric,
         type: node.type
       };
     });
@@ -52,7 +53,8 @@ const ProblemGraph = ({ graphData, getSubmission }) => {
                 id: node.id,
                 label: node.label,
                 pk: node.label,
-                type: node.type
+                type: node.type,
+                radius: node.metric
               }}
               fill="red"
             />
