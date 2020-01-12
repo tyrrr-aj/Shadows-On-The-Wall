@@ -9,6 +9,7 @@ import {
   ADD_SOLUTION_SUCCESS,
   ADD_SOLUTION
 } from "./actions";
+import { submissionTypes } from "../../Utils/submissionTypes";
 
 function* getSubmission(action) {
   try {
@@ -37,7 +38,9 @@ function* addComment(action) {
     yield put({
       type: GET_SUBMISSION,
       id: action.id,
-      submissionType: action.submissionType
+      submissionType: action.parentSubmissionType
+        ? action.parentSubmissionType
+        : action.submissionType
     });
   } catch (error) {
     console.log(error);

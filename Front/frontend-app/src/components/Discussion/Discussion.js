@@ -12,7 +12,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Discussion = ({ pk, submissionType, comments, addComment }) => {
+const Discussion = ({
+  pk,
+  submissionType,
+  comments,
+  addComment,
+  parentSubmissionType
+}) => {
   const classes = useStyles();
 
   const [isAddingComment, setIsAddingComment] = useState(false);
@@ -24,7 +30,7 @@ const Discussion = ({ pk, submissionType, comments, addComment }) => {
         text: text,
         author: 1
       };
-      addComment(pk, submissionType, comment);
+      addComment(pk, submissionType, comment, parentSubmissionType);
       setIsAddingComment(false);
       setText("");
     } else {

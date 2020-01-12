@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Solution = ({ solution }) => {
+const Solution = ({ solution, parentSubmissionType }) => {
   const classes = useStyles();
   return (
     <div className={"solution"}>
@@ -25,6 +25,7 @@ const Solution = ({ solution }) => {
         rating={solution.rating}
       />
       <Discussion
+        parentSubmissionType={parentSubmissionType}
         pk={solution.pk}
         submissionType={submissionTypes.solution}
         comments={solution.comments}

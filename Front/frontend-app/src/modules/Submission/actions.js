@@ -18,11 +18,17 @@ export const clearSubmission = () => ({
   type: CLEAR_SUBMISSION
 });
 
-export const addComment = (id, submissionType, comment) => ({
+export const addComment = (
+  id,
+  submissionType,
+  comment,
+  parentSubmissionType
+) => ({
   type: ADD_COMMENT,
   id,
   submissionType,
-  comment
+  comment,
+  parentSubmissionType
 });
 
 export const addSolution = (id, submissionType, submission) => ({
