@@ -6,17 +6,28 @@ import { connect } from "react-redux";
 import { getSubmission } from "../../modules/Submission/actions";
 import { submissionTypes } from "../../Utils/submissionTypes";
 import ProblemLeftPanel from "./ProblemLeftPanel";
+import { withRouter } from "react-router-dom";
+import _isEmpty from "lodash/isEmpty";
 
-const ProblemPage = ({ match, history, getProblem, problem }) => {
+const ProblemPage = ({
+  match,
+  history,
+  getProblem,
+  problem,
+  hideLeftPanel
+}) => {
   useEffect(() => {
-    const id = match.params.id;
-    getProblem(id);
+    refreshProblem();
   }, []);
 
-  return (
+  const refreshProblem = () => {
+    const id = match.params.id;
+    getProblem(id);
+  };
+  return _isEmpty(problem) ? null : (
     <div>
       <Grid container justify="center" item xs={12}>
-        <ProblemLeftPanel id={problem.id} />
+        {hideLeftPanel ? null : <ProblemLeftPanel pk={problem.pk} />}
         <ProblemMainPanel problem={problem} />
       </Grid>
     </div>
@@ -29,11 +40,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getProblem: id => {
-    dispatch(getSubmission(id, submissionTypes.problem));
+  getProblem: pk => {
+    dispatch(getSubmission(pk, submissionTypes.problem));
   }
 });
 
 ProblemPage.propTypes = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProblemPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(ProblemPage));

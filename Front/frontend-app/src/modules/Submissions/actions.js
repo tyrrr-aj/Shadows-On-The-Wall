@@ -11,14 +11,16 @@ export const getSubmissions = () => ({
   type: GET_SUBMISSIONS
 });
 
-export const upvoteSubmission = id => ({
+export const upvoteSubmission = (id, submissionType) => ({
   type: SUBMISSION_UPVOTE,
-  id
+  id,
+  submissionType
 });
 
-export const downvoteSubmission = id => ({
+export const downvoteSubmission = (id, submissionType) => ({
   type: SUBMISSION_DOWNVOTE,
-  id
+  id,
+  submissionType
 });
 
 export const postSubmission = (submission, submissionType) => ({

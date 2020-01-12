@@ -2,44 +2,29 @@ import { serverURL } from "../../constants";
 import { submissionTypes } from "../../Utils/submissionTypes";
 
 export function fetchSubmissions() {
-  return [
-    {
-      type: 0,
-      title: "a problem",
-      description: "asfdjhbgf",
-      rating: 10,
-      tags: ["tag1", "tag2", "tag3"]
-    },
-    {
-      type: 1,
-      title: "initiative to....",
-      description: "asdjhas",
-      rating: 0,
-      tags: ["tag1", "tag5"]
-    },
-    {
-      type: 0,
-      title: "name",
-      description: "jahskd",
-      rating: 4,
-      tags: []
-    }
-  ];
-  console.log("x");
   const url = `${serverURL}submissions`;
   return fetch(url).then(response => response.json());
 }
 
-export function upvoteSubmission(id) {
-  return id;
+export function upvoteSubmission(id, submissionType) {
+  const url = `${serverURL}${submissionType}/${id}/upvote`;
+  return fetch(url);
 }
 
-export function downvoteSubmission(id) {
-  return id;
+export function downvoteSubmission(id, submissionType) {
+  const url = `${serverURL}${submissionType}/${id}/downvote`;
+  return fetch(url);
 }
 
 export function postSubmission(submission, submissionType) {
-  const url = `${serverURL}/${submissionType}/new`;
+  const url = `${serverURL}${submissionType}/new`;
+  return fetch(url, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(submission)
+  });
   console.log(submission);
-  return "zajebiscie";
 }

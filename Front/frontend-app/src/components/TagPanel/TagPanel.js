@@ -6,12 +6,15 @@ import {
   ListItem,
   ListItemIcon,
   Checkbox,
-  ListItemText
+  ListItemText,
+  Typography
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { getTags, setSelectedTags } from "../../modules/Tags/actions";
 import { getSubmissions } from "../../modules/Submissions/actions";
+import CustomScroll from "react-custom-scroll";
+import "./TagPanel.scss";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,31 +48,38 @@ const TagPanel = ({ tags, getTags, getSubmissions, setSelectedTags }) => {
 
   return (
     <Grid container item xs={3}>
-      <List classes={classes.root}>
-        {tags.map(tag => {
-          const labelId = `checkbox-list-label-${tag}`;
-          return (
-            <ListItem
-              key={tag}
-              role={undefined}
-              dense
-              button
-              onClick={handleToggle(tag)}
-            >
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={checked.indexOf(tag) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ "aria-labelledby": labelId }}
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={tag} />
-            </ListItem>
-          );
-        })}
-      </List>
+      <Typography variant="h6" className={classes.title}>
+        Tags
+      </Typography>
+      <div className={"scroll-container"}>
+        <CustomScroll heightRelativeToParent="100%">
+          <List classes={classes.root}>
+            {tags.map(tag => {
+              const labelId = `checkbox-list-label-${tag}`;
+              return (
+                <ListItem
+                  key={tag}
+                  role={undefined}
+                  dense
+                  button
+                  onClick={handleToggle(tag)}
+                >
+                  <ListItemIcon>
+                    <Checkbox
+                      edge="start"
+                      checked={checked.indexOf(tag) !== -1}
+                      tabIndex={-1}
+                      disableRipple
+                      inputProps={{ "aria-labelledby": labelId }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText id={labelId} primary={tag} />
+                </ListItem>
+              );
+            })}
+          </List>
+        </CustomScroll>
+      </div>
     </Grid>
   );
 };

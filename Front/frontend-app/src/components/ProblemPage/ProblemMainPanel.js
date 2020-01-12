@@ -24,7 +24,7 @@ const ProblemMainPanel = ({ problem }) => {
 
         <Discussion
           submissionType={submissionTypes.problem}
-          id={problem.id}
+          pk={problem.pk}
           comments={problem.comments}
         />
       </div>

@@ -4,6 +4,7 @@ import rootSaga from "./rootSaga";
 import submissionsReducer from "./Submissions/submissionsReducer";
 import filteringReducer from "./Tags/filteringReducer";
 import currentSubmissionReducer from "./Submission/currentSubmissionReducer";
+import graphReducer from "./Graph/graphReducer";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const sagaMiddleware = createSagaMiddleware();
@@ -14,7 +15,8 @@ export default () => {
     combineReducers({
       currentSubmission: currentSubmissionReducer,
       submissions: submissionsReducer,
-      filtering: filteringReducer
+      filtering: filteringReducer,
+      graph: graphReducer
     }),
     composeEnhancers(applyMiddleware(...middleware))
   );

@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SubmissionForm = ({ postSubmission }) => {
+const SubmissionForm = ({ postSubmission, noTags }) => {
   const [labelWidth, setLabelWidth] = React.useState(0);
   const [values, setValues] = React.useState({
     id: "",
@@ -41,7 +41,14 @@ const SubmissionForm = ({ postSubmission }) => {
   };
 
   const handlePost = () => {
-    postSubmission(values);
+    const tagsList = values.tags.split(",");
+    const submission = {
+      title: values.title,
+      description: values.description,
+      tags: tagsList,
+      author: 1
+    };
+    postSubmission(submission);
   };
 
   return (
@@ -68,25 +75,27 @@ const SubmissionForm = ({ postSubmission }) => {
           onChange={handleChange}
         />
       </FormControl>
-      <FormControl variant="outlined">
-        <TextField
-          placeholder={"insert tags"}
-          variant="outlined"
-          id="component-outlined"
-          name={"tags"}
-          label={"tags"}
-          value={values.tags}
-          onChange={handleChange}
-          helperText={`Insert tags delimited with "," eg. "tag1,tag2"`}
-        />
-      </FormControl>
+      {noTags ? null : (
+        <FormControl variant="outlined">
+          <TextField
+            placeholder={"insert tags"}
+            variant="outlined"
+            id="component-outlined"
+            name={"tags"}
+            label={"tags"}
+            value={values.tags}
+            onChange={handleChange}
+            helperText={`Insert tags delimited with "," eg. "tag1,tag2"`}
+          />
+        </FormControl>
+      )}
       <FormControl>
         <Button
           className={classes.button}
           onClick={handlePost}
           variant="contained"
         >
-          Save
+          submit
         </Button>
       </FormControl>
     </form>

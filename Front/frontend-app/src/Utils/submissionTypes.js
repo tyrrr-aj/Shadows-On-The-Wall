@@ -1,4 +1,5 @@
 export const submissionTypes = {
   problem: "problem",
-  initiative: "initiative"
+  initiative: "initiative",
+  solution: "solution"
 };

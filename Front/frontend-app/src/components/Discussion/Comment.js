@@ -11,18 +11,18 @@ import ArrowDropUp from "@material-ui/icons/ArrowDropUp";
 import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
 
 const Comment = ({
-  id,
+  pk,
   submissionType,
   comment,
   handleUpVote,
   handleDownVote
 }) => {
   const handleUpVoteClick = () => {
-    handleUpVote(id, submissionType);
+    handleUpVote(pk, submissionType);
   };
 
   const handleDownVoteClick = () => {
-    handleDownVote(id, submissionType);
+    handleDownVote(pk, submissionType);
   };
 
   return (

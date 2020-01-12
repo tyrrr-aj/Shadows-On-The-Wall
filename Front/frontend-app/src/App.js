@@ -8,8 +8,9 @@ import AddProblem from "./components/AddProblem/AddProblem";
 import AddInitiative from "./components/AddInitiative/AddInitiative";
 import EditProblem from "./components/EditProblem/EditProblem";
 import ProblemPage from "./components/ProblemPage/ProblemPage";
-import ProblemGraph from "./components/ProblemGraph/ProblemGraph";
 import InitiativeGraph from "./components/InitiativeGraph/InitiativeGraph";
+import SubmissionGraphPage from "./components/SubmissionGraphPage/SubmissionGraphPage";
+import AddSolution from "./components/AddSolution/AddSolution";
 
 const store = configureStore();
 
@@ -20,10 +21,20 @@ function App() {
         <BrowserRouter>
           <Switch>
             <Route path="/problem/new" component={AddProblem} />
+            <Route
+              path="/problem/:id/graph"
+              render={props => (
+                <SubmissionGraphPage {...props} isProblem={true} />
+              )}
+            />
+            <Route path="/problem/:id/addSolution" component={AddSolution} />
             <Route path="/problem/:id" component={ProblemPage} />
-            <Route path="/problem/:id/graph" component={ProblemGraph} />
             <Route path="/initiative/new" component={AddInitiative} />
-            <Route path="/initiative/:id/graph" component={InitiativeGraph} />
+            <Route path="/initiative/:id" component={ProblemPage} />
+            <Route
+              path="/initiative/:id/graph"
+              render={props => <InitiativeGraph {...props} isProblem={false} />}
+            />
             <Route path="/" component={Home} />
           </Switch>
         </BrowserRouter>

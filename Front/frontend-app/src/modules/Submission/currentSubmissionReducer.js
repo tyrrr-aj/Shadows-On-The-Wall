@@ -1,4 +1,8 @@
-import { GET_SUBMISSION, GET_SUBMISSION_SUCCESS } from "./actions";
+import {
+  GET_SUBMISSION,
+  GET_SUBMISSION_SUCCESS,
+  CLEAR_SUBMISSION
+} from "./actions";
 
 const initialState = {
   submission: {
@@ -19,6 +23,8 @@ export default function currentSubmissionReducer(state = initialState, action) {
       return { ...state, loading: true };
     case GET_SUBMISSION_SUCCESS:
       return { ...state, submission: action.payload, loading: false };
+    case CLEAR_SUBMISSION:
+      return { ...state, submission: {} };
     default:
       return state;
   }
