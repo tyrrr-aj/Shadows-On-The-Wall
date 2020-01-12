@@ -265,7 +265,7 @@ class SubmissionsViewSet(viewsets.ViewSet):
             submission.tags_as_set = {tag.name for tag in submission.tags_as_set}
         given_tags = self.request.query_params.get('tags', None)
         if given_tags:
-            given_tags = set(given_tags.split(chr(18))[0].split('\x18'))
+            given_tags = {tag for tag in given_tags.split(',')}
             for submission in submissions:
                 print(given_tags & submission.tags_as_set)
             submissions = list(filter(lambda submission: given_tags & submission.tags_as_set, submissions))
