@@ -175,19 +175,24 @@ class SubmissionsViewSet(viewsets.ViewSet):
             initiative.type = 'initiative'
         submissions = problems.union(initiatives)
         submissions = set(submissions)
-        # given_tags = self.request.query_params.get('tags', None)
-        # if given_tags:
-        #     given_tags = set(given_tags.split(chr(18))[0].split('\x18'))
-        #     filter(lambda submission: given_tags & set(submission.tags), submissions)
+        for submission in submissions:
+            submission.tags_as_set = set(submission.tags.all())
+            submission.tags_as_set = {tag.name for tag in submission.tags_as_set}
+        given_tags = self.request.query_params.get('tags', None)
+        if given_tags:
+            given_tags = set(given_tags.split(chr(18))[0].split('\x18'))
+            for submission in submissions:
+                print(given_tags & submission.tags_as_set)
+            submissions = list(filter(lambda submission: given_tags & submission.tags_as_set, submissions))
         sort_method = self.request.query_params.get('sort', None)
-        # if sort_method:
-        #     if sort_method == 'votes':
-        #         comparator = lambda submission: submissions.votes
-        #     elif sort_method == 'time':
-        #         comparator = lambda submission: submission.date_time
-        #     else:
-        #         return Response(status=status.HTTP_400_BAD_REQUEST)
-        #     submissions = sorted(list(submissions), key=comparator)
+        if sort_method:
+            if sort_method == 'votes':
+                comparator = lambda submission: submission.votes
+            elif sort_method == 'time':
+                comparator = lambda submission: submission.date_time
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            submissions = sorted(list(submissions), key=comparator, reverse=True)
         serializer = SubmissionSerializer(submissions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
